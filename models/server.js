@@ -10,6 +10,7 @@ class Server {
         this.paths = {
             auth: '/api/auth',
             usuarios: '/api/user',
+            roles: '/api/roles',
         }
 
         // Middlewares
@@ -32,6 +33,7 @@ class Server {
     routes() {
         this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuarios, require('../routes/users'));
+        this.app.use(this.paths.roles, require('../routes/roles'));
     }
 
     listen() {
