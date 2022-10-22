@@ -3,6 +3,7 @@ const bcryptjs = require('bcryptjs')
 const User = require('../models/user');
 const { checkToken } = require('../helpers/verifyToken');
 
+/**funcion para obtener usuarios de la base de datos */
 const getUser = async (req, res) => {
     const { token } = req.headers
     try {
@@ -17,6 +18,7 @@ const getUser = async (req, res) => {
     }
 }
 
+/**funcion para obetener un usuario por id */
 const getUserByID = async (req, res) => {
     const { document: id_user } = req.params
     const { token } = req.headers
@@ -35,11 +37,7 @@ const getUserByID = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
-
-
 }
-
-
 
 module.exports = {
     getUser,

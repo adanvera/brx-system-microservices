@@ -20,7 +20,6 @@ class Server {
     }
 
     middlewares() {
-
         // CORS
         this.app.use(cors());
         // Lectura y parseo del body
@@ -32,7 +31,7 @@ class Server {
 
     routes() {
         this.app.use(this.paths.auth, require('../routes/auth'));
-        this.app.use( this.paths.usuarios, require('../routes/users'));
+        this.app.use(this.paths.usuarios, require('../routes/users'));
     }
 
     listen() {
