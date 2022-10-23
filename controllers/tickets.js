@@ -1,5 +1,5 @@
 const sequelize = require("../database/db");
-const { GET_TICKET_BY_ID } = require("../helpers/querys");
+const { GET_TICKET_BY_ID, GET_TICKETS } = require("../helpers/querys");
 const { checkToken } = require("../helpers/verifyToken");
 const Ticket = require("../models/ticket");
 
@@ -11,10 +11,15 @@ const getTickets = async (req, res) => {
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-        const tickets = await Ticket.findAll({ where: { status: 1 } });
+        // const tickets = await Ticket.findAll({ where: { status: 1 } });
+        const [results, metadata] = await sequelize.query(
+            GET_TICKETS
+        )
+
+        res.json(results)
         console.log('Obtenemos los siguientes datos');
-        console.log(tickets.dataValues);
-        res.json(tickets);
+        console.log(results)
+
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
