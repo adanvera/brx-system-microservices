@@ -21,6 +21,9 @@ const Ticket = sequelize.define('tickets', {
     },
     created_at: { type: DataTypes.DATE },
     updated_at: { type: DataTypes.DATE },
+    ticket_comments: {
+        type: DataTypes.STRING,
+    },
 }, {
     timestamps: false
 })
