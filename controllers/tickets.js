@@ -4,6 +4,25 @@ const { checkToken } = require("../helpers/verifyToken");
 const Ticket = require("../models/ticket");
 
 
+const createTicket = async (req, res = response) => {
+    const { token } = req.headers
+
+    console.log(`Se obtiene los siguientes datos para insertar el ticket `)
+    console.log(req.body)
+    if (!token) return res.status(400).json({ msg: `El token es obligatorio` })
+    //verificamos el token si es valido o no ha expirado
+    const isToken = await checkToken(token)
+    if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` })
+
+    try {
+        const ticket = await Ticket.create(req.body)
+        res.json(ticket);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+}
+
 const getTickets = async (req, res) => {
     const { token } = req.headers
     try {
@@ -45,5 +64,6 @@ const getTicketById = async (req, res) => {
 
 module.exports = {
     getTickets,
-    getTicketById
+    getTicketById,
+    createTicket,
 }
