@@ -11,7 +11,7 @@ const getMachines = async (req, res) => {
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
 
-        const machines = await Machines.findAll({ attributes: { exclude: ['createdAt', 'updatedAt'], }, where: { status: 1 } });
+        const machines = await Machines.findAll({ where: { status: 1 } });
         console.log('Obtenemos los siguientes datos')
         console.log(machines.dataValues);
 

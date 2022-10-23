@@ -16,6 +16,8 @@ const Machines = sequelize.define('miningmachines', {
     id_model: {
         type: DataTypes.INTEGER,
     }
+}, {
+    timestamps: false
 })
 
 module.exports = Machines;
