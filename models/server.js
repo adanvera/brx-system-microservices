@@ -5,12 +5,13 @@ class Server {
 
     constructor() {
         this.app = express();
-        this.port = 4000
+        this.port = 9000
 
         this.paths = {
             auth: '/api/auth',
             usuarios: '/api/user',
             roles: '/api/roles',
+            machines: '/api/machines',
         }
 
         // Middlewares
@@ -34,6 +35,7 @@ class Server {
         this.app.use(this.paths.auth, require('../routes/auth'));
         this.app.use(this.paths.usuarios, require('../routes/users'));
         this.app.use(this.paths.roles, require('../routes/roles'));
+        this.app.use(this.paths.machines, require('../routes/machines'));
     }
 
     listen() {
