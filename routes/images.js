@@ -1,10 +1,14 @@
 const { Router } = require('express');
-const { upload } = require('../controllers/images');
+const controller = require('../controllers/images')
 
 const router = Router();
 
+router.post(
+    `/`,
+    controller.upload,
+    controller.uploadFile,
+)
 
-router.post("/", upload.single("image"))
+router.put(`/:id`, controller.upload, controller.updateImage)
 
-
-module.exports = router;
+module.exports = router

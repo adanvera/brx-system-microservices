@@ -15,7 +15,6 @@ class Server {
             tickets: '/api/tickets',
             client:   '/api/client',
             images: 'api/images'
-            
         }
 
         // Middlewares
@@ -42,8 +41,7 @@ class Server {
         this.app.use(this.paths.machines, require('../routes/machines'));
         this.app.use(this.paths.tickets, require('../routes/ticket'));
         this.app.use( this.paths.client, require('../routes/clients'));
-
-       
+        this.app.use(this.paths.images, require('../routes/images'));
     }
 
     listen() {

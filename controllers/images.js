@@ -1,23 +1,58 @@
-const multer = require("multer")
-const path = require("path")
+const multer = require('multer')
+const sequelize = require("../database/db");
+const { INSERT_IMAGE, UPDATE_IMAGE } = require("../helpers/querys");
+const { checkToken } = require("../helpers/verifyToken");
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "./sources")
+    destination: function (req, file, cb) {
+        cb(null, 'sources')
     },
-    filename: (req, file, cb) => {
-        console.log((file));
-        cb(null, Date.now() + path.extname(file.originalname))
-    }
+    filename: function (req, file, cb) {
+        cb(null, `${Date.now()}-${file.originalname}`)
+    },
+
 })
 
 const upload = multer({ storage: storage })
 
-const toUpload = (req, res)=>{
-    upload.single("image")
+exports.upload = upload.single('image')
+
+exports.uploadFile = async (req, res) => {
+    const { token } = req.headers
+    const url_image = req.file.filename
+
+    try {
+        console.log(`Se obtiene los siguientes datos para insertar la imagen `)
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` })
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        const [results, metadata] = await sequelize.query(
+            INSERT_IMAGE, {
+            replacements: [url_image]
+        });
+        res.json({ msg: 'Se ha insertado la imagen correctamente' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 }
 
 
-module.exports = {
-    toUpload,
+exports.updateImage = async (req, res) => {
+    const { token } = req.headers
+    const url_image = req.file.filename
+    const { id: id_image } = req.params
+
+    try {
+        console.log(`Se obtiene los siguientes datos para reemplazar la imagen `)
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` })
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        const [results, metadata] = await sequelize.query(
+            UPDATE_IMAGE + id_image, {
+            replacements: [url_image]
+        });
+        res.json({ msg: 'Se actualiza exitosamente la imagen' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 }
