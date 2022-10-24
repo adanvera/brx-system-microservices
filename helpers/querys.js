@@ -4,6 +4,7 @@ const GET_TICKET_BY_ID = 'SELECT gestionagil_prodDB.tickets.id_ticket, gestionag
 const GET_MACHINE_BY_ID = "SELECT id_machine, status, porcentaje, id_model FROM gestionagil_prodDB.miningmachines WHERE gestionagil_prodDB.miningmachines.id_machine = ";
 const INSERT_IMAGE = 'INSERT INTO gestionagil_prodDB.brx_images (url_image) VALUES(?)';
 const UPDATE_IMAGE = 'UPDATE gestionagil_prodDB.brx_images SET url_image=(?) WHERE id_image='
+const GET_URL_IMAGE = "SELECT gestionagil_prodDB.brx_images.url_image FROM gestionagil_prodDB.brx_images JOIN gestionagil_prodDB.users ON gestionagil_prodDB.brx_images.id_image = gestionagil_prodDB.users.id_image WHERE gestionagil_prodDB.brx_images.id_image = "
 
 module.exports = {
     GET_ROL_BY_ID,
@@ -11,5 +12,6 @@ module.exports = {
     GET_TICKET_BY_ID,
     GET_MACHINE_BY_ID,
     INSERT_IMAGE,
-    UPDATE_IMAGE
+    UPDATE_IMAGE,
+    GET_URL_IMAGE
 }

@@ -1,7 +1,9 @@
 const multer = require('multer')
 const sequelize = require("../database/db");
-const { INSERT_IMAGE, UPDATE_IMAGE } = require("../helpers/querys");
+const { INSERT_IMAGE, UPDATE_IMAGE, GET_URL_IMAGE } = require("../helpers/querys");
 const { checkToken } = require("../helpers/verifyToken");
+const Image = require('../models/image');
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -48,6 +50,23 @@ exports.updateImage = async (req, res) => {
             replacements: [url_image]
         });
         res.json({ msg: 'Se actualiza exitosamente la imagen' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+exports.getImageById = async (req, res) => {
+    const { token } = req.headers
+    const { id: id_image } = req.params
+
+    try {
+        console.log(`Se obtiene los siguientes datos para buscar la imagen `)
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` })
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        const [results, metadata] = await sequelize.query(GET_URL_IMAGE + id_image)
+
+        res.json(results);
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
