@@ -10,7 +10,6 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         cb(null, `${Date.now()}-${file.originalname}`)
     },
-
 })
 
 const upload = multer({ storage: storage })
@@ -20,7 +19,6 @@ exports.upload = upload.single('image')
 exports.uploadFile = async (req, res) => {
     const { token } = req.headers
     const url_image = req.file.filename
-
     try {
         console.log(`Se obtiene los siguientes datos para insertar la imagen `)
         if (!token) return res.status(400).json({ msg: `El token es obligatorio` })
@@ -36,12 +34,10 @@ exports.uploadFile = async (req, res) => {
     }
 }
 
-
 exports.updateImage = async (req, res) => {
     const { token } = req.headers
     const url_image = req.file.filename
     const { id: id_image } = req.params
-
     try {
         console.log(`Se obtiene los siguientes datos para reemplazar la imagen `)
         if (!token) return res.status(400).json({ msg: `El token es obligatorio` })

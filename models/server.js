@@ -13,8 +13,8 @@ class Server {
             roles: '/api/roles',
             machines: '/api/machines',
             tickets: '/api/tickets',
-            client:   '/api/client',
-            images: 'api/images'
+            client: '/api/client',
+            images: '/api/images'
         }
 
         // Middlewares
