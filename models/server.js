@@ -13,6 +13,7 @@ class Server {
             roles: '/api/roles',
             machines: '/api/machines',
             tickets: '/api/tickets',
+            images: 'api/images'
         }
 
         // Middlewares
@@ -38,6 +39,12 @@ class Server {
         this.app.use(this.paths.roles, require('../routes/roles'));
         this.app.use(this.paths.machines, require('../routes/machines'));
         this.app.use(this.paths.tickets, require('../routes/ticket'));
+
+        // this.app.post("/upload", upload.single("image") , (req,res)=>{
+        //     res.send("subio")
+        // })
+
+       
     }
 
     listen() {
