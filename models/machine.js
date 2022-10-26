@@ -13,9 +13,6 @@ const Machines = sequelize.define('model_machines', {
     brand_machine: {
         type: DataTypes.STRING
     },
-    stock_machine: {
-        type: DataTypes.INTEGER,
-    },
     consume_machine: {
         type: DataTypes.STRING
     }
