@@ -2,6 +2,8 @@ const { response, request } = require('express');
 const bcryptjs = require('bcryptjs')
 const User = require('../models/user');
 const { checkToken } = require('../helpers/verifyToken');
+const { GET_USERS } = require('../helpers/querys');
+const sequelize = require("../database/db");
 
 /**funcion para obtener usuarios de la base de datos */
 const getUser = async (req, res) => {
@@ -11,8 +13,13 @@ const getUser = async (req, res) => {
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-        const user = await User.findAll({ attributes: { exclude: ['password'] }, where: { status: 1 } });
-        res.json(user);
+
+        const [results, metadata] = await sequelize.query(
+            GET_USERS
+        )
+
+        res.json(results)
+        console.log(results)
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }

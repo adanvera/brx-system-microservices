@@ -12,7 +12,7 @@ const getMachines = async (req, res) => {
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
 
-        const machines = await Machines.findAll({ where: { status: 1 } });
+        const machines = await Machines.findAll();
         console.log('Obtenemos los siguientes datos')
         console.log(machines.dataValues);
 
@@ -32,7 +32,7 @@ const getMachineById = async (req, res) => {
     if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
 
     const [results, metadata] = await sequelize.query(
-        GET_MACHINE_BY_ID+id_machine
+        GET_MACHINE_BY_ID + id_machine
     )
 
     res.json(results)

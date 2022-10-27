@@ -1,21 +1,22 @@
 const { INTEGER, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-const Machines = sequelize.define('miningmachines', {
-    id_machine: {
+const Machines = sequelize.define('model_machines', {
+    id_model: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
-    status: {
-        type: DataTypes.INTEGER
+    description_model: {
+        type: DataTypes.STRING
     },
-    porcentaje: {
-        type: DataTypes.INTEGER
+    brand_machine: {
+        type: DataTypes.STRING
     },
-    id_model: {
-        type: DataTypes.INTEGER,
+    consume_machine: {
+        type: DataTypes.STRING
     }
+
 }, {
     timestamps: false
 })
