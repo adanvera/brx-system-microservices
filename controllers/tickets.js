@@ -8,11 +8,7 @@ const createTicket = async (req, res = response) => {
     const { token } = req.headers
     try {
         console.log(`Se obtiene los siguientes datos para insertar el ticket `)
-<<<<<<< HEAD
-        //await checkToken(token,req.session.user.id_user)
-=======
         await checkToken(token, req.session.user.id_user)
->>>>>>> ef2dc30e4701cfb48029a0e473465052a459ca0e
         const ticket = await Ticket.create(req.body)
         res.json(ticket);
     } catch (error) {
