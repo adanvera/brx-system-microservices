@@ -8,7 +8,7 @@ const createTicket = async (req, res = response) => {
     const { token } = req.headers
     try {
         console.log(`Se obtiene los siguientes datos para insertar el ticket `)
-        await checkToken(token, req.session.user.id_user)
+        //await checkToken(token,req.session.user.id_user)
         const ticket = await Ticket.create(req.body)
         res.json(ticket);
     } catch (error) {
@@ -72,7 +72,7 @@ const modifyTicket = async (req, res) => {
         const [rowCount] = await Ticket.update(req.body, { where: { id_ticket: id } })
         console.log(rowCount);
         if (rowCount == 0) return res.status(400).json({ msg: `Ticket con id ${id} no existe` });
-        res.json({msg:'Datos de ticket acutalizado correctamente'});
+        res.json({ msg: 'Datos de ticket acutalizado correctamente' });
 
     } catch (error) {
         return res.status(500).json({ message: error.message });
