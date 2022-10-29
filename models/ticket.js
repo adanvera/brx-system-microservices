@@ -24,6 +24,12 @@ const Ticket = sequelize.define('tickets', {
     ticket_comments: {
         type: DataTypes.STRING,
     },
+    priority: {
+        type: DataTypes.STRING,
+    },
+    ticket_name: {
+        type: DataTypes.STRING,
+    },
 }, {
     timestamps: false
 })
