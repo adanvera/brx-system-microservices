@@ -15,7 +15,8 @@ class Server {
             machines: '/api/machines',
             tickets: '/api/tickets',
             client: '/api/client',
-            images: '/api/images'
+            images: '/api/images',
+            mining: '/api/mining'
         }
 
         // Middlewares
@@ -44,6 +45,7 @@ class Server {
         this.app.use(this.paths.tickets, require('../routes/ticket'));
         this.app.use( this.paths.client, require('../routes/clients'));
         this.app.use(this.paths.images, require('../routes/images'));
+        this.app.use(this.paths.mining, require('../routes/miningmachines'))
     }
 
     listen() {
