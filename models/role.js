@@ -13,7 +13,7 @@ const Role = sequelize.define('roles', {
     status: {
         type: DataTypes.INTEGER
     },
-    access:{
+    access: {
         type: DataTypes.STRING
     }
 }, {
