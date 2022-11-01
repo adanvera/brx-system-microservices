@@ -6,7 +6,7 @@ class Server {
 
     constructor() {
         this.app = express();
-        this.port = 4000
+        this.port = 4048
 
         this.paths = {
             auth: '/api/auth',

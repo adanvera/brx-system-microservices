@@ -35,7 +35,26 @@ const getRoles = async (req, res) => {
     }
 }
 
+const createRol = async (req, res) => {
+    const { token } = req.headers
+
+    console.log(`Se obtiene los siguientes datos para insertar el rol `)
+    console.log(req.body)
+
+    if (!token) return res.status(400).json({ msg: `El token es obligatorio` })
+
+    try {
+        console.log('Intentaremos crear un role con los siguientes datos');
+        console.log(req.body);
+        const role = await Role.create(req.body);
+        res.json(role);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getRolesByUserId,
     getRoles,
+    createRol
 }
