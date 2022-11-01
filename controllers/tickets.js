@@ -66,7 +66,6 @@ const modifyTicket = async (req, res) => {
     try {
         if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         //verificamos si esta logueado y el token aun no ha expirado
-        await checkToken(token, req.session.user.id_user)
 
         console.log('Actualizando datos del ticket');
         const [rowCount] = await Ticket.update(req.body, { where: { id_ticket: id } })
