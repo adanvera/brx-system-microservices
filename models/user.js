@@ -29,9 +29,6 @@ const User = sequelize.define('users', {
     phone: {
         type: DataTypes.STRING
     },
-    id_image: {
-        type: DataTypes.INTEGER,
-    }
 }, {
     timestamps: false
 })

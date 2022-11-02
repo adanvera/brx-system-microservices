@@ -63,8 +63,29 @@ const getUserByDocument = async (document = '', id_user = '') => {
     }
 }
 
+const createUser = async (req, res) => {
+    const { token } = req.headers
+    const { password } = req.body
+
+    console.log(`Se obtiene los siguientes datos para insertar el user `)
+    console.log(req.body)
+
+    if (!token) return res.status(400).json({ msg: `El token es obligatorio` })
+
+    try {
+        // Encriptar la contraseña
+        const salt = bcryptjs.genSaltSync();
+        req.body.password = bcryptjs.hashSync(password, salt);
+        const user = await User.create(req.body);
+        res.json(user);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getUser,
     getUserByID,
     getUserByDocument,
+    createUser,
 }
