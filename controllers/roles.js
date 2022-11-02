@@ -71,9 +71,37 @@ const updateRole = async (req, res) => {
     }
 }
 
+const assignRole = async (req, res) => {
+
+    const { token } = req.headers
+    console.log(`Se obtiene los siguientes datos para insertar el rol al usuario `)
+    console.log(req.body)
+    if (!token) return res.status(400).json({ msg: `El token es obligatorio` })
+
+    const user = await getUserByDocument(req.body.document)
+    console.log('Obtenemos el usuario');
+
+    console.log(user);
+
+    try {
+        const [results, metadata] = await sequelize.query(
+            ADD_ROL_TO_USER, {
+            replacements: [user.id_user, req.body.id_role]
+        }
+
+        );
+        res.json({ msg: 'Se ha añadido el rol al usuario correctamente' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+
+}
+
 module.exports = {
     getRolesByUserId,
     getRoles,
     createRol,
-    updateRole
+    updateRole,
+    assignRole,
 }
