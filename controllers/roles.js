@@ -1,5 +1,5 @@
 const sequelize = require("../database/db");
-const { GET_ROL_BY_ID, ADD_ROL_TO_USER } = require("../helpers/querys");
+const { GET_ROL_BY_ID, ADD_ROL_TO_USER, UPDATE_ROL_TO_USER } = require("../helpers/querys");
 const { checkToken } = require("../helpers/verifyToken");
 const Role = require("../models/role");
 const { getUserByDocument } = require("./user");
@@ -94,8 +94,29 @@ const assignRole = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
+}
 
+const updateUserRole = async (req, res) => {
 
+    const { token } = req.headers
+    console.log(`Se obtiene los siguientes datos para insertar el rol al usuario `)
+    console.log(req.body)
+    if (!token) return res.status(400).json({ msg: `El token es obligatorio` })
+
+    const user = await getUserByDocument(req.body.document)
+    console.log('Obtenemos el usuario');
+
+    try {
+        const [results, metadata] = await sequelize.query(
+            UPDATE_ROL_TO_USER, {
+            replacements: [req.body.id_role, user.id_user,]
+        }
+
+        );
+        res.json({ msg: 'Se ha actualizado el rol del usuario' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 }
 
 module.exports = {
@@ -104,4 +125,5 @@ module.exports = {
     createRol,
     updateRole,
     assignRole,
+    updateUserRole,
 }
