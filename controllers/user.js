@@ -83,9 +83,31 @@ const createUser = async (req, res) => {
     }
 }
 
+const updateUser = async (req, res) => {
+    const { id } = req.params
+    const { token } = req.headers
+
+    console.log('Obtenemos los siguientes datos: ');
+    console.log(req.body);
+
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        console.log('Procedemos a actualizar el usuario');
+        const [rowCount] = await User.update(req.body, { where: { id_user: id } })
+        console.log(rowCount);
+        if (rowCount == 0) return res.status(400).json({ msg: `Usuario con id ${id} no existe` });
+        res.json({ msg: 'Usuario acutalizado exitosamente' });
+        console.log("Actualización realizada");
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+}
+
 module.exports = {
     getUser,
     getUserByID,
     getUserByDocument,
     createUser,
+    updateUser,
 }
