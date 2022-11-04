@@ -119,6 +119,25 @@ const updateUserRole = async (req, res) => {
     }
 }
 
+const getRoleById = async (req, res) => {
+    const { id } = req.params
+    const { token } = req.headers
+    console.log(`Se procede a hacer la consulta del rol `)
+
+    try {
+        console.log('Accediendo a datos del rol');
+        const [rowCount] = await Role.findAll(req.body, { where: { id_role: id } })
+        console.log(rowCount);
+        if (rowCount == 0) return res.status(400).json({ msg: `Rol con id ${id} no existe` });
+        console.log('Obtenemos los siguientes datos');
+        console.log(rowCount.dataValues);
+        res.json(rowCount);
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+}
+
 module.exports = {
     getRolesByUserId,
     getRoles,
@@ -126,4 +145,5 @@ module.exports = {
     updateRole,
     assignRole,
     updateUserRole,
+    getRoleById
 }
