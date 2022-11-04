@@ -1,5 +1,5 @@
 const sequelize = require("../database/db");
-const { GET_ROL_BY_ID, ADD_ROL_TO_USER, UPDATE_ROL_TO_USER } = require("../helpers/querys");
+const { GET_ROL_BY_ID, ADD_ROL_TO_USER, UPDATE_ROL_TO_USER, GET_ROLE_ID } = require("../helpers/querys");
 const { checkToken } = require("../helpers/verifyToken");
 const Role = require("../models/role");
 const { getUserByDocument } = require("./user");
@@ -120,20 +120,18 @@ const updateUserRole = async (req, res) => {
 }
 
 const getRoleById = async (req, res) => {
-    const { id } = req.params
     const { token } = req.headers
-    console.log(`Se procede a hacer la consulta del rol `)
+    const { id: id_role } = req.params
 
     try {
-        console.log('Accediendo a datos del rol');
-        const [rowCount] = await Role.findAll(req.body, { where: { id_role: id } })
-        console.log(rowCount);
-        if (rowCount == 0) return res.status(400).json({ msg: `Rol con id ${id} no existe` });
-        console.log('Obtenemos los siguientes datos');
-        console.log(rowCount.dataValues);
-        res.json(rowCount);
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const [results, metadata] = await sequelize.query(
+            GET_ROLE_ID + id_role
+        );
+        res.json(results)
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        console.log(error);
     }
 
 }

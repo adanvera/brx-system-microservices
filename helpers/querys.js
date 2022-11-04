@@ -9,6 +9,7 @@ const GET_USERS = 'SELECT gestionagil_prodDB.users.id_user, gestionagil_prodDB.u
 const GET_MINING_MACHINES = 'SELECT gestionagil_prodDB.miningmachines.id_machine, gestionagil_prodDB.miningmachines.status, gestionagil_prodDB.miningmachines.porcentaje, gestionagil_prodDB.miningmachines.id_model, CONCAT(  gestionagil_prodDB.clients .name , " ", gestionagil_prodDB.clients.last_name ) as name, gestionagil_prodDB.miningmachines.consume_machine  , gestionagil_prodDB.model_machines.description_model FROM gestionagil_prodDB.miningmachines JOIN gestionagil_prodDB.model_machines on gestionagil_prodDB.miningmachines.id_model = gestionagil_prodDB.model_machines .id_model JOIN gestionagil_prodDB.clients on gestionagil_prodDB.miningmachines.document = gestionagil_prodDB.clients.document '
 const ADD_ROL_TO_USER = 'INSERT INTO users_roles (id_user,id_role)  VALUES (?,?)'
 const UPDATE_ROL_TO_USER = 'UPDATE users_roles SET id_role = ? WHERE id_user = ?'
+const GET_ROLE_ID = 'SELECT id_role, description, status, access FROM gestionagil_prodDB.roles WHERE id_role ='
 
 module.exports = {
     GET_ROL_BY_ID,
@@ -22,4 +23,5 @@ module.exports = {
     GET_MINING_MACHINES,
     ADD_ROL_TO_USER,
     UPDATE_ROL_TO_USER,
+    GET_ROLE_ID
 }
