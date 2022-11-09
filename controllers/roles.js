@@ -54,7 +54,7 @@ const createRol = async (req, res) => {
 }
 
 const updateRole = async (req, res) => {
-    const { id } = req.params
+    const { id: id_role } = req.params
     const { token } = req.headers
 
     console.log(`Se obtiene los siguientes datos para actualizar el rol `)
@@ -62,9 +62,8 @@ const updateRole = async (req, res) => {
 
     try {
         console.log('Actualizando datos del rol');
-        const [rowCount] = await Role.update(req.body, { where: { id_role: id } })
+        const [rowCount] = await Role.update(req.body, { where: { id_role: id_role } })
         console.log(rowCount);
-        if (rowCount == 0) return res.status(400).json({ msg: `Rol con id ${id} no existe` });
         res.json({ msg: 'Datos de rol acutalizado correctamente' });
     } catch (error) {
         return res.status(500).json({ message: error.message });
