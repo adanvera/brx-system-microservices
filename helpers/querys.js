@@ -10,7 +10,7 @@ const GET_MINING_MACHINES = 'SELECT gestionagil_prodDB.miningmachines.id_machine
 const ADD_ROL_TO_USER = 'INSERT INTO users_roles (id_user,id_role)  VALUES (?,?)'
 const UPDATE_ROL_TO_USER = 'UPDATE users_roles SET id_role = ? WHERE id_user = ?'
 const GET_ROLE_ID = 'SELECT id_role, description, status, access FROM gestionagil_prodDB.roles WHERE id_role ='
-const UPDATE_ROL = 'UPDATE gestionagil_prodDB.roles SET description = ? , access = ?  WHERE id_role='
+const UPDATE_ROL = 'UPDATE gestionagil_prodDB.roles SET gestionagil_prodDB.roles.description = ? , gestionagil_prodDB.roles.access = ?  WHERE id_role='
 
 module.exports = {
     GET_ROL_BY_ID,
