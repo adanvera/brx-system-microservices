@@ -77,6 +77,7 @@ const updateClient = async(req,res) => {
 
   console.log('Obtenemos los siguientes datos: ');
   console.log(req.body);
+  console.log(id);
 
   try {
     if(!token)return res.status(400).json({ msg: `El token es obligatorio` });
