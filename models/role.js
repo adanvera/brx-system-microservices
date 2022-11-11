@@ -13,6 +13,10 @@ const Role = sequelize.define('roles', {
     status: {
         type: DataTypes.INTEGER
     },
+    sub_permissons: {
+        type: DataTypes.INTEGER
+    }
+    ,
     access: {
         type: DataTypes.STRING
     }
