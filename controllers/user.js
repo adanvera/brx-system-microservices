@@ -84,7 +84,7 @@ const createUser = async (req, res) => {
         await sendRegisterMail(req.body.email, refPassword)
         res.json(user);
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error });
     }
 }
 

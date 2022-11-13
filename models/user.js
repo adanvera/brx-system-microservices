@@ -1,4 +1,4 @@
-const { INTEGER, DataTypes } = require("sequelize");
+const { INTEGER, DataTypes, Sequelize } = require("sequelize");
 const sequelize = require("../database/db");
 
 const User = sequelize.define('users', {
@@ -9,13 +9,24 @@ const User = sequelize.define('users', {
     },
     document: {
         type: DataTypes.STRING,
-
+        unique: {
+            args: 'document',
+            message: 'Este documento ya se encuentra registrado'
+        }
     },
     password: {
         type: DataTypes.STRING
     },
     email: {
-        type: DataTypes.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+            isEmail: true
+        },
+        unique: {
+            args: 'email',
+            message: 'The email is already taken!'
+        }
     },
     status: {
         type: DataTypes.INTEGER,
