@@ -30,6 +30,10 @@ const Ticket = sequelize.define('tickets', {
     ticket_name: {
         type: DataTypes.STRING,
     },
+    assigned_to: {
+        type: DataTypes.INTEGER,
+        defaultValue: ''
+    }
 }, {
     timestamps: false
 })
