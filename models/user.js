@@ -19,6 +19,7 @@ const User = sequelize.define('users', {
     },
     status: {
         type: DataTypes.INTEGER,
+        defaultValue: 1
     },
     name: {
         type: DataTypes.STRING

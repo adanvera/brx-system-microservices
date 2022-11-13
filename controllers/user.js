@@ -4,6 +4,8 @@ const User = require('../models/user');
 const { checkToken } = require('../helpers/verifyToken');
 const { GET_USERS } = require('../helpers/querys');
 const sequelize = require("../database/db");
+const { sendRegisterMail } = require('./SendMailer');
+const { getUserById } = require('../helpers/helper');
 
 /**funcion para obtener usuarios de la base de datos */
 const getUser = async (req, res) => {
@@ -27,7 +29,7 @@ const getUser = async (req, res) => {
 
 /**funcion para obetener un usuario por id */
 const getUserByID = async (req, res) => {
-    const { document: id_user } = req.params
+    const { id: id_user } = req.params
     const { token } = req.headers
 
     try {
@@ -75,8 +77,11 @@ const createUser = async (req, res) => {
     try {
         // Encriptar la contraseña
         const salt = bcryptjs.genSaltSync();
+        const refPassword = req.body.password
         req.body.password = bcryptjs.hashSync(password, salt);
         const user = await User.create(req.body);
+        //hacemos el envio del correo para enviarle las credenciales  
+        await sendRegisterMail(req.body.email, refPassword)
         res.json(user);
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -124,7 +129,6 @@ const changePassword = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
-
 }
 
 module.exports = {
