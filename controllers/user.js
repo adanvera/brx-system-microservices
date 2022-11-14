@@ -140,12 +140,10 @@ const resetPassrod = async (req, res) => {
 
 const changePassword = async (req, res) => {
     const { id: id_user } = req.params
-    const { token } = req.headers
     const { password, newPassword } = req.body
 
     try {
 
-        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         console.log('Procedemos a actualizar la contraseña del usuario');
         // Encriptamos la contraseña
         const salt = bcryptjs.genSaltSync();

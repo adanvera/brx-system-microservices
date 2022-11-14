@@ -27,18 +27,19 @@ const login = async (req, res = response) => {
             });
         }
 
-        if (user.temp_active === 1) {
-            return res.status(400).json({
-                msg: 'Reseteo de contraseña requerida',
-                errorCode: 1005
-            });
-        }
-
         // Verifica la contraseña
         const validPassword = bcryptjs.compareSync(password, user.password);
         if (!validPassword) {
             return res.status(400).json({
                 msg: 'Contraseña no valido'
+            });
+        }
+
+
+        if (user.temp_active === 1) {
+            return res.status(400).json({
+                msg: 'Reseteo de contraseña requerida',
+                errorCode: 1005
             });
         }
 
