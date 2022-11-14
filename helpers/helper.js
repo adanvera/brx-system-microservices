@@ -1,23 +1,17 @@
 const User = require("../models/user");
 
-const getUserById = async (id_user, res) => {
+const gettingUseData = async (id_user) => {
     try {
-
-
-        console.log(id_user);
-
+        console.log("iniciamos consulta de usuario");
         if (!id_user) return res.status(400).json({ msg: `Se requiere el id del usuario` });
-        const user = await User.findOne({ where: { id_user } });
-
-        if (!user) return res.status(400).json({ msg: `Usuario con id ${id_user} no existe` });
-        delete user.dataValues.password
-        res.json(user);
-
+        const user = await User.findOne({ where: { id_user: id_user} });
+        return (user.dataValues)
+        
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return console.log(error);
     }
 }
 
 module.exports = {
-    getUserById
+    gettingUseData
 }

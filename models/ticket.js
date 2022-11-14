@@ -32,7 +32,6 @@ const Ticket = sequelize.define('tickets', {
     },
     assigned_to: {
         type: DataTypes.INTEGER,
-        defaultValue: ''
     }
 }, {
     timestamps: false

@@ -48,27 +48,26 @@ const sendRegisterMail = async (email, password) => {
     console.log("Envio exitoso de correo de registro");
 }
 
-const resetPasswordMail = async (email, newPassword) => {
+const resetPasswordMail = async (newPassword, email) => {
     const resetPassordForm =
         `
-    <div class=""
-        style="justify-content: center; text-align:center; width: 550px; text-align: center; border-radius: 8px;">
-        <div class="headimg">
-            <img width="25%" src="http://drive.google.com/uc?export=view&id=1q1gXiwbiu6xHil_kpT9WSDcR6dWke6yX" alt=""
-                data-bit="iit" />
-        </div>
-        <div class="texthead">
-            <h1>Reseteo de contraseña</h1>
-        </div>
-        <div class="cont" style=" border-radius: 8px;">
-            <div class="msg" style="border: 1px solid #008F8F;; border-radius: 8px; text-align: initial;
-            padding-left: 20px;">
-                <h4>Sus credenciales para iniciar sesión son:</h4>
-                <p>usuario: ${email}</p>
-                <p>password: ${newPassword}</p>
+        <div class=""
+            style="justify-content: center; text-align:center; width: 550px; text-align: center; border-radius: 8px;">
+            <div class="headimg">
+                <img width="25%" src="http://drive.google.com/uc?export=view&id=1q1gXiwbiu6xHil_kpT9WSDcR6dWke6yX" alt=""
+                    data-bit="iit" />
+            </div>
+            <div class="texthead">
+                <h1>Reseteo de contraseña</h1>
+            </div>
+            <div class="cont" style=" border-radius: 8px;">
+                <div class="msg" style="border: 1px solid #008F8F;; border-radius: 8px; text-align: initial;
+                padding-left: 20px;">
+                    <h4>Su nueva contraseña es:</h4>
+                    <p>password: ${newPassword}</p>
+                </div>
             </div>
         </div>
-    </div>
     `
 
     console.log("Se hace envio de correo de reseteo");
@@ -89,13 +88,18 @@ const resetPasswordMail = async (email, newPassword) => {
         to: email, // list of receivers
         subject: "Reseteo de contraseña", // Subject line
         text: "Te damos la bienvenida", // plain text body
-        html: registerForm, // html body
+        html: resetPassordForm, // html body
     });
     console.log("Envio exitoso de reseto de contraseña");
+}
+
+const sendNotification = async (data) => {
+
 }
 
 
 module.exports = {
     sendRegisterMail,
-    resetPasswordMail
+    resetPasswordMail,
+    sendNotification
 }

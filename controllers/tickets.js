@@ -6,6 +6,10 @@ const Ticket = require("../models/ticket");
 
 const createTicket = async (req, res = response) => {
     const { token } = req.headers
+
+
+    console.log(req.body);
+
     try {
         console.log(`Se obtiene los siguientes datos para insertar el ticket `)
         //await checkToken(token,req.session.user.id_user)

@@ -4,8 +4,8 @@ const User = require('../models/user');
 const { checkToken } = require('../helpers/verifyToken');
 const { GET_USERS } = require('../helpers/querys');
 const sequelize = require("../database/db");
-const { sendRegisterMail } = require('./SendMailer');
-const { getUserById } = require('../helpers/helper');
+const { sendRegisterMail, resetPasswordMail } = require('./SendMailer');
+const { getUserById, gettingUserById, gettingUserByIdasync, gettingUseData } = require('../helpers/helper');
 
 /**funcion para obtener usuarios de la base de datos */
 const getUser = async (req, res) => {
@@ -104,7 +104,7 @@ const updateUser = async (req, res) => {
         res.json({ msg: 'Usuario acutalizado exitosamente' });
         console.log("Actualización realizada");
     } catch (error) {
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error });
     }
 
 }
@@ -115,13 +115,20 @@ const changePassword = async (req, res) => {
     const { password } = req.body
 
     try {
+
         if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         console.log('Procedemos a actualizar la contraseña del usuario');
-
         // Encriptamos la contraseña
         const salt = bcryptjs.genSaltSync();
+        const refPassword = req.body.password
         req.body.password = bcryptjs.hashSync(password, salt);
+        // accedemos al dato del usuario
+        const userData = await gettingUseData(id_user)
+        const userMail= userData.email
+        console.log("inicio acutlaizacion");
         const [rowCount] = await User.update(req.body, { where: { id_user: id_user } })
+        console.log("finaliza acutlaizacion");
+        await resetPasswordMail(refPassword, userMail)
         console.log(rowCount);
         if (rowCount == 0) return res.status(400).json({ msg: `Usuario con id ${id} no existe` });
         res.json({ msg: 'Contraseña acutalizado correctamente' });
