@@ -20,10 +20,17 @@ const login = async (req, res = response) => {
         }
 
         // Verifica si el usuario está activo
-        if (user.status == 0) {
+        if (user.status === 0) {
             return res.status(400).json({
                 msg: 'Usuario bloqueado',
                 errorCode: 1002
+            });
+        }
+
+        if (user.temp_active === 1) {
+            return res.status(400).json({
+                msg: 'Reseteo de contraseña requerida',
+                errorCode: 1005
             });
         }
 

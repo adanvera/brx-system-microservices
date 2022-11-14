@@ -124,7 +124,7 @@ const changePassword = async (req, res) => {
         req.body.password = bcryptjs.hashSync(password, salt);
         // accedemos al dato del usuario
         const userData = await gettingUseData(id_user)
-        const userMail= userData.email
+        const userMail = userData.email
         console.log("inicio acutlaizacion");
         const [rowCount] = await User.update(req.body, { where: { id_user: id_user } })
         console.log("finaliza acutlaizacion");
@@ -138,6 +138,45 @@ const changePassword = async (req, res) => {
     }
 }
 
+const resetPassrod = async (req, res) => {
+    const { id: id_user } = req.params
+    const { token } = req.headers
+    const { password, newPassword } = req.body
+
+    try {
+
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        console.log('Procedemos a actualizar la contraseña del usuario');
+        // Encriptamos la contraseña
+        const salt = bcryptjs.genSaltSync();
+        const refPassword = req.body.newPassword
+
+        req.body.password = bcryptjs.hashSync(password, salt);
+        req.body.newPassword = bcryptjs.hashSync(newPassword, salt);
+
+        // accedemos al dato del usuario
+        const userData = await gettingUseData(id_user)
+        const userMail = userData.email
+        const userTempPass = userData.password
+        const validationTempPass = bcryptjs.compareSync(password, userTempPass);
+
+        if (!validationTempPass) {
+            return res.status(400).json({
+                msg: 'Contraseña temporal no valida'
+            });
+        }
+
+        console.log("inicio proceso de reseteo de contraseña");
+        const [rowCount] = await User.update({ password: req.body.newPassword, temp_active: 0 }, { where: { id_user: id_user } })
+        await resetPasswordMail(refPassword, userMail)
+        if (rowCount == 0) return res.status(400).json({ msg: `Usuario con id ${id} no existe` });
+        console.log("finaliza proceso de reseteo de contraseña");
+        res.status(200).json({ msg: 'Contraseña reseteada exitosamente' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getUser,
     getUserByID,
@@ -145,4 +184,5 @@ module.exports = {
     createUser,
     updateUser,
     changePassword,
+    resetPassrod
 }

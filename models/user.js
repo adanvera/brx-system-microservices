@@ -41,6 +41,11 @@ const User = sequelize.define('users', {
     phone: {
         type: DataTypes.STRING
     },
+    temp_active: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+    }
+
 }, {
     timestamps: false
 })
