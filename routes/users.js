@@ -7,8 +7,7 @@ router.get('/', getUser)
 router.get('/:id', getUserByID)
 router.post('/', createUser)
 router.put('/:id', updateUser)
-router.put('/psw/:id', changePassword)
-router.put('/reset/:id', resetPassrod)
-
+router.put('/reset/:id', changePassword)
+router.put('/psw/:id', resetPassrod)
 
 module.exports = router;
