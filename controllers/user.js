@@ -109,7 +109,7 @@ const updateUser = async (req, res) => {
 
 }
 
-const changePassword = async (req, res) => {
+const resetPassrod = async (req, res) => {
     const { id: id_user } = req.params
     const { token } = req.headers
     const { password } = req.body
@@ -126,7 +126,7 @@ const changePassword = async (req, res) => {
         const userData = await gettingUseData(id_user)
         const userMail = userData.email
         console.log("inicio acutlaizacion");
-        const [rowCount] = await User.update(req.body, { where: { id_user: id_user } })
+        const [rowCount] = await User.update({ password: req.body.password, temp_active: 1 }, { where: { id_user: id_user } })
         console.log("finaliza acutlaizacion");
         await resetPasswordMail(refPassword, userMail)
         console.log(rowCount);
@@ -138,7 +138,7 @@ const changePassword = async (req, res) => {
     }
 }
 
-const resetPassrod = async (req, res) => {
+const changePassword = async (req, res) => {
     const { id: id_user } = req.params
     const { token } = req.headers
     const { password, newPassword } = req.body
