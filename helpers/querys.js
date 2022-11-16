@@ -11,6 +11,11 @@ const UPDATE_ROL_TO_USER = 'UPDATE users_roles SET id_role = ? WHERE id_user = ?
 const GET_ROLE_ID = 'SELECT id_role, description, status, access , sub_permissons FROM gestionagil_prodDB.roles WHERE id_role ='
 const UPDATE_ROL = 'UPDATE gestionagil_prodDB.roles SET gestionagil_prodDB.roles.description = ? , gestionagil_prodDB.roles.access = ? , gestionagil_prodDB.roles.sub_permissons = ? WHERE id_role='
 
+//operaciones
+const GET_OPERATIONS_BY_CLIENT = "SELECT * FROM operations WHERE id_client = ?"
+
+
+
 module.exports = {
     GET_ROL_BY_ID,
     GET_TICKETS,
@@ -24,4 +29,5 @@ module.exports = {
     UPDATE_ROL_TO_USER,
     GET_ROLE_ID,
     UPDATE_ROL,
+    GET_OPERATIONS_BY_CLIENT
 }
