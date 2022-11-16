@@ -27,11 +27,7 @@ class Server {
 
     middlewares() {
         // CORS
-        this.app.use(cors(
-            {
-                origin: 'http://localhost:3000',
-            }
-        ))
+        this.app.use(cors());
         // Lectura y parseo del body
         this.app.use(express.json());
         // Directorio Público
