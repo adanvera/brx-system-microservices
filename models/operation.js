@@ -16,6 +16,9 @@ const Operation = sequelize.define('operations',{
     amount:{
         type:DataTypes.INTEGER
     },
+    commission:{
+        type:DataTypes.DECIMAL
+    },
     type:{
         type:DataTypes.STRING
     }

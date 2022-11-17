@@ -29,5 +29,6 @@ module.exports = {
     UPDATE_ROL_TO_USER,
     GET_ROLE_ID,
     UPDATE_ROL,
-    GET_OPERATIONS_BY_CLIENT
+    GET_OPERATIONS_BY_CLIENT,
+ 
 }
