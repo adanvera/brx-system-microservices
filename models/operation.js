@@ -14,13 +14,19 @@ const Operation = sequelize.define('operations',{
         
     },
     amount:{
-        type:DataTypes.INTEGER
+        type:DataTypes.DECIMAL
     },
     commission:{
         type:DataTypes.DECIMAL
     },
     type:{
         type:DataTypes.STRING
+    },
+    currency:{
+        type:DataTypes.STRING
+    },
+    created:{
+        type:DataTypes.DATE
     }
 },{
     timestamps: false

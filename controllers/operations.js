@@ -11,7 +11,6 @@ const addOperation = async (req,res) => {
         if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
-        console.info("Pasoo : "+isToken);
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
         const existClient = await Client.findOne({where:{id_client}})
         if(!existClient) return res.status(400).json({msg:`cliente no  existecon codigo ${id_client} no existe `})
@@ -42,6 +41,14 @@ const getAllOperationsByClient = async (req,res)=>{
             GET_OPERATIONS_BY_CLIENT,{
             replacements:[ Number(id)]}
         );
+        //cambiamos el formato
+        results.map( op =>{
+            if(op.type === "1"){
+                op.type = "Compra"
+            }else{
+                op.type = "Venta"
+            }
+        })
         res.json(results)
     } catch (error) {
         console.log(error);
@@ -63,6 +70,13 @@ const getAllOperations = async (req,res)=>{
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
         const operations = await Operation.findAll()
+        operations.map(op => {
+            if(op.type === "1"){
+                op.type = "Compra"
+            }else{
+                op.type = "Venta"
+            }
+        })
         res.status(200).json(operations)
     } catch (error) {
         console.log(error);
