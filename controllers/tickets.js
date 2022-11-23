@@ -82,9 +82,29 @@ const modifyTicket = async (req, res) => {
     }
 }
 
+const deleteTicket = async (req, res) => {
+    const { id } = req.params
+    const { token } = req.headers
+
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos si esta logueado y el token aun no ha expirado
+
+        console.log('Eliminando ticket');
+        const [rowCount] = await Ticket.update({ status: 0 }, { where: { id_ticket: id } })
+        console.log(rowCount);
+        if (rowCount == 0) return res.status(400).json({ msg: `Ticket con id ${id} no existe` });
+        res.json({ msg: 'Ticket eliminado correctamente' });
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getTickets,
     getTicketById,
     createTicket,
-    modifyTicket
+    modifyTicket,
+    deleteTicket
 }

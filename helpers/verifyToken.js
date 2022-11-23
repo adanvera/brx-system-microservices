@@ -6,6 +6,7 @@ const checkToken = async (token, idUser = '') => {
     console.log('Token existe verificamos si no ha expirado');
     console.log(tokenExist.created);
     const date = new Date();
+    console.log("fecha de hoy"+(date.toISOString().split('T')[0]));
     if (tokenExist.created !== (date.toISOString().split('T')[0])) return false
     console.log('EL token es valido');
     console.log(tokenExist);
