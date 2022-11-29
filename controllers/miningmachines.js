@@ -28,7 +28,7 @@ const addMinero = async (req, res) => {
 
     const { token } = req.headers
     const { machine_name, status, porcentaje, id_model, document, consume_machine, hashrate, tempmax
-        , maxfan } = req.body
+        , maxfan , ip } = req.body
     try {
         if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         //verificamos el token si es valido o no ha expirado
@@ -44,7 +44,8 @@ const addMinero = async (req, res) => {
             consume_machine,
             hashrate,
             tempmax,
-            maxfan
+            maxfan,
+            ip
         })
 
         res.json(miningmachines)

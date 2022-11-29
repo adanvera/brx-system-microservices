@@ -7,6 +7,9 @@ const Mining = sequelize.define('miningmachines', {
         autoIncrement: true,
         primaryKey: true
     },
+    ip:{
+        type: DataTypes.STRING,
+    },
     machine_name: {
         type: DataTypes.STRING,
     },
