@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-const API_KEY = 'lxk.488c9fff469a5023e42ef2c456b80dfb'
+const API_KEY = 'lxk.8c6f4ad3025474807a837e3f5121b405'
 const API_URI = 'https://api.beta.luxor.tech/graphql'
 
 const getAllMiners = async (req, res) => {
@@ -15,38 +15,8 @@ const getAllMiners = async (req, res) => {
                 'x-api-key': API_KEY,
             },
             body: JSON.stringify({
-                query: `query allMinersDetails {
-                    allMinersDetails {
-                        mpn{
-                            ARRR
-                            BTC
-                            DASH
-                            DCR
-                            KMD
-                            LBC
-                            SC
-                            SCP
-                            ZEC
-                            ZEN
-                            EQUI
-                            TBTC
-                            ETH
-                            TETH
-                        }
-                        duration {
-                            seconds
-                            minutes
-                            hours
-                            days
-                            months
-                            years
-                        }
-                        first
-                        last
-                        offset
-                        before
-                        after
-                    }
+                query: `query getPoolHashrate {
+                    getPoolHashrate(mpn: BTC, orgSlug: "luxor")
                   }
                   `
             }),
@@ -91,7 +61,8 @@ const currentProfile = async (req, res) => {
 
 }
 
+
 module.exports = {
     getAllMiners,
-    currentProfile
+    currentProfile,
 }

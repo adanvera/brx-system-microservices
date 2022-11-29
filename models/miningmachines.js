@@ -7,6 +7,9 @@ const Mining = sequelize.define('miningmachines', {
         autoIncrement: true,
         primaryKey: true
     },
+    machine_name: {
+        type: DataTypes.STRING,
+    },
     status: {
         type: DataTypes.INTEGER
     },
@@ -22,8 +25,19 @@ const Mining = sequelize.define('miningmachines', {
     },
     consume_machine: {
         type: DataTypes.STRING
+    },
+    hashrate: {
+        type: DataTypes.INTEGER
+    },
+    tempmax: {
+        type: DataTypes.INTEGER
+    },
+    maxfan: {
+        type: DataTypes.INTEGER
+    },
+    uptime: {
+        type: DataTypes.INTEGER
     }
-
 }, {
     timestamps: false
 })

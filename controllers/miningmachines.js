@@ -24,6 +24,36 @@ const getMiningMachines = async (req, res) => {
     }
 }
 
+const addMinero = async (req, res) => {
+
+    const { token } = req.headers
+    const { machine_name, status, porcentaje, id_model, document, consume_machine, hashrate, tempmax
+        , maxfan } = req.body
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+
+        const miningmachines = await Mining.create({
+            machine_name,
+            status,
+            porcentaje,
+            id_model,
+            document,
+            consume_machine,
+            hashrate,
+            tempmax,
+            maxfan
+        })
+
+        res.json(miningmachines)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
-    getMiningMachines
+    getMiningMachines,
+    addMinero
 }
