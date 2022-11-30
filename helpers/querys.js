@@ -11,7 +11,7 @@ const UPDATE_ROL_TO_USER = 'UPDATE users_roles SET id_role = ? WHERE id_user = ?
 const GET_ROLE_ID = 'SELECT id_role, description, status, access , sub_permissons FROM gestionagil_prodDB.roles WHERE id_role ='
 const UPDATE_ROL = 'UPDATE gestionagil_prodDB.roles SET gestionagil_prodDB.roles.description = ? , gestionagil_prodDB.roles.access = ? , gestionagil_prodDB.roles.sub_permissons = ? WHERE id_role='
 const TICKET_SUMMARY = 'SELECT MONTH(created_at) AS month, count(*) as cantidad  FROM tickets WHERE  YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at) BETWEEN 1 and 12 GROUP BY MONTH(created_at) ORDER BY 1'
-
+const MINERS_SUMMARY = 'SELECT MONTH(created_at) AS monthdate, count(*) as cantidad  FROM miningmachines WHERE  YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at) BETWEEN 1 and 12 GROUP BY MONTH(created_at) ORDER BY 1'
 //operaciones
 const GET_OPERATIONS_BY_CLIENT = "SELECT * FROM operations WHERE id_client = ?"
 
@@ -31,5 +31,6 @@ module.exports = {
     GET_ROLE_ID,
     UPDATE_ROL,
     GET_OPERATIONS_BY_CLIENT,
-    TICKET_SUMMARY
+    TICKET_SUMMARY,
+    MINERS_SUMMARY
 }
