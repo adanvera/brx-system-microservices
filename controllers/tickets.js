@@ -1,20 +1,27 @@
 const sequelize = require("../database/db");
+const { gettingUseData } = require("../helpers/helper");
 const { GET_TICKET_BY_ID, GET_TICKETS, TICKET_SUMMARY } = require("../helpers/querys");
 const { checkToken } = require("../helpers/verifyToken");
 const Ticket = require("../models/ticket");
+const { sendNotificationTkt } = require("./SendMailer");
 
 
 const createTicket = async (req, res = response) => {
     const { token } = req.headers
 
+    const asigned_to = req.body.asigned_to
+    const userAsigned = await gettingUseData(asigned_to)
 
-    console.log(req.body);
+
+    console.log(userAsigned);
+
 
     try {
         console.log(`Se obtiene los siguientes datos para insertar el ticket `)
-        //await checkToken(token,req.session.user.id_user)
+        
         const ticket = await Ticket.create(req.body)
         res.json(ticket);
+        await sendNotificationTkt(userAsigned.email, ticket)
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
