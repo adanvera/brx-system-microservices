@@ -36,6 +36,7 @@ const addMinero = async (req, res) => {
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
 
         const miningmachines = await Mining.create({
+            machinedata,
             machine_name,
             status,
             porcentaje,
