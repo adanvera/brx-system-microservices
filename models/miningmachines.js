@@ -22,8 +22,8 @@ const Mining = sequelize.define('miningmachines', {
     porcentaje: {
         type: DataTypes.INTEGER
     },
-    id_model: {
-        type: DataTypes.INTEGER
+    machinedata: {
+        type: DataTypes.STRING
     }
     ,
     document: {
