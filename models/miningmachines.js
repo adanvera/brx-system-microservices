@@ -17,7 +17,8 @@ const Mining = sequelize.define('miningmachines', {
         type: DataTypes.STRING,
     },
     status: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        defaultValue: 1
     },
     porcentaje: {
         type: DataTypes.INTEGER
