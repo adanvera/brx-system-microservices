@@ -35,14 +35,6 @@ const login = async (req, res = response) => {
             });
         }
 
-
-        if (user.temp_active === 1) {
-            return res.status(400).json({
-                msg: 'Reseteo de contraseña requerida',
-                errorCode: 1005
-            });
-        }
-
         // Generar el JWT
         const token = uuid()
         console.log(token);
@@ -53,6 +45,13 @@ const login = async (req, res = response) => {
             user,
             token
         })
+
+        if (user.temp_active === 1) {
+            return res.status(400).json({
+                msg: 'Reseteo de contraseña requerida',
+                errorCode: 1005
+            });
+        }
 
     } catch (error) {
         console.log(error)

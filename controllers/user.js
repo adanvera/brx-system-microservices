@@ -111,10 +111,12 @@ const updateUser = async (req, res) => {
 
 const resetPassrod = async (req, res) => {
     const { id: id_user } = req.params
+    const { token } = req.headers
     const { password } = req.body
 
     try {
 
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         console.log('Procedemos a actualizar la contraseña del usuario');
         // Encriptamos la contraseña
         const salt = bcryptjs.genSaltSync();
@@ -139,9 +141,10 @@ const resetPassrod = async (req, res) => {
 const changePassword = async (req, res) => {
     const { id: id_user } = req.params
     const { password, newPassword } = req.body
+    const { token } = req.headers
 
     try {
-
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         console.log('Procedemos a actualizar la contraseña del usuario');
         // Encriptamos la contraseña
         const salt = bcryptjs.genSaltSync();

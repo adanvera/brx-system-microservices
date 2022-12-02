@@ -15,8 +15,7 @@ class Server {
             tickets: '/api/tickets',
             client: '/api/client',
             images: '/api/images',
-            mining: '/api/mining',
-            operation:'/api/operation'
+            mining: '/api/mining'
         }
 
         // Middlewares
@@ -33,7 +32,6 @@ class Server {
         this.app.use(express.json());
         // Directorio Público
         this.app.use(express.static('public'));
-       
 
     }
 
@@ -43,10 +41,10 @@ class Server {
         this.app.use(this.paths.roles, require('../routes/roles'));
         this.app.use(this.paths.machines, require('../routes/machines'));
         this.app.use(this.paths.tickets, require('../routes/ticket'));
-        this.app.use( this.paths.client, require('../routes/clients'));
+        this.app.use(this.paths.client, require('../routes/clients'));
         this.app.use(this.paths.images, require('../routes/images'));
         this.app.use(this.paths.mining, require('../routes/miningmachines'))
-        this.app.use(this.paths.operation, require('../routes/operations'))
+        this.app.use(this.paths.luxor, require('../routes/Luxor'))
     }
 
     listen() {
