@@ -33,6 +33,10 @@ const Importaciones = sequelize.define('importaciones', {
     },
     articulos: {
         type: DataTypes.STRING
+    }, 
+    cantidad:{
+        type: DataTypes.INTEGER,
+        defaultValue: 1
     }
 }, {
     timestamps: false
