@@ -14,6 +14,7 @@ const TICKET_SUMMARY = 'SELECT MONTH(created_at) AS month, count(*) as cantidad 
 const MINERS_SUMMARY = 'SELECT MONTH(created_at) AS monthdate, count(*) as cantidad  FROM miningmachines WHERE  YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at) BETWEEN 1 and 12 GROUP BY MONTH(created_at) ORDER BY 1'
 //operaciones
 const GET_OPERATIONS_BY_CLIENT = "SELECT * FROM operations WHERE id_client = ?"
+const GET_COUNT_USER = '  '
 
 
 
@@ -32,5 +33,6 @@ module.exports = {
     UPDATE_ROL,
     GET_OPERATIONS_BY_CLIENT,
     TICKET_SUMMARY,
-    MINERS_SUMMARY
+    MINERS_SUMMARY,
+    GET_COUNT_USER
 }

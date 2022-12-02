@@ -2,7 +2,7 @@ const { response, request } = require('express');
 const bcryptjs = require('bcryptjs')
 const User = require('../models/user');
 const { checkToken } = require('../helpers/verifyToken');
-const { GET_USERS } = require('../helpers/querys');
+const { GET_USERS, GET_COUNT_USER } = require('../helpers/querys');
 const sequelize = require("../database/db");
 const { sendRegisterMail, resetPasswordMail } = require('./SendMailer');
 const { getUserById, gettingUserById, gettingUserByIdasync, gettingUseData } = require('../helpers/helper');
@@ -176,6 +176,67 @@ const changePassword = async (req, res) => {
     }
 }
 
+const summaryUser = async (req, res) => {
+    const { token } = req.headers
+
+    console.log("entrando a obtner cantidad de usuarios registrados con estdo 1");
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+
+        const [results, metadata] = await sequelize.query(`SELECT COUNT(*) as cantidad FROM gestionagil_prodDB.users WHERE status not LIKE '2'`);
+
+        res.json(results)
+        console.log(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    
+}
+
+
+const getUserCantidadBlcoked = async (req, res) => {
+    const { token } = req.headers
+
+    console.log("entrando a obtner cantidad de usuarios registrados con estdo 0");
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+
+        const [results, metadata] = await sequelize.query(`SELECT COUNT(*) as cantidad FROM gestionagil_prodDB.users  WHERE gestionagil_prodDB.users.status  = 0`);
+
+        res.json(results)
+        console.log(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    
+}
+
+const getUserCantidadActive = async (req, res) => {
+    const { token } = req.headers
+
+    console.log("entrando a obtner cantidad de usuarios registrados con estdo 1");
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+
+        const [results, metadata] = await sequelize.query(`SELECT COUNT(*) as cantidad FROM gestionagil_prodDB.users  WHERE gestionagil_prodDB.users.status  = 1`);
+
+        res.json(results)
+        console.log(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+    
+}
+
 module.exports = {
     getUser,
     getUserByID,
@@ -183,5 +244,8 @@ module.exports = {
     createUser,
     updateUser,
     changePassword,
-    resetPassrod
+    resetPassrod,
+    summaryUser,
+    getUserCantidadBlcoked,
+    getUserCantidadActive
 }

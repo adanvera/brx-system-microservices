@@ -13,9 +13,6 @@ const Importaciones = sequelize.define('importaciones', {
     id_proveedor: {
         type: DataTypes.INTEGER
     },
-    machinedata: {
-        type: DataTypes.STRING
-    },
     empresa_envio: {
         type: DataTypes.STRING
     },
