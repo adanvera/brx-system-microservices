@@ -4,7 +4,9 @@ const sequelize = require("../database/db");
 const Machines = sequelize.define('machines', {
     id: {
         type: DataTypes.STRING,
-        primaryKey: true
+        primaryKey: true,
+        unique: true,
+        allowNull: false
     },
     name: {
         type: DataTypes.STRING
