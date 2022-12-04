@@ -17,7 +17,7 @@ class Server {
             images: '/api/images',
             mining: '/api/mining',
             luxor: '/api/luxor/queries',
-            operation:'/api/operation',
+            operation: '/api/operation',
             importaciones: '/api/importaciones'
         }
 
