@@ -29,6 +29,10 @@ const Machines = sequelize.define('machines', {
     created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
+    },
+    status: {
+        type: DataTypes.INTEGER,
+        defaultValue: 1
     }
 }, {
     timestamps: false

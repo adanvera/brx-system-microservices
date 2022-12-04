@@ -11,14 +11,10 @@ const createTicket = async (req, res = response) => {
 
     const asigned_to = req.body.asigned_to
     const userAsigned = await gettingUseData(asigned_to)
-
-
     console.log(userAsigned);
-
-
     try {
         console.log(`Se obtiene los siguientes datos para insertar el ticket `)
-        
+
         const ticket = await Ticket.create(req.body)
         res.json(ticket);
         await sendNotificationTkt(userAsigned.email, ticket)
@@ -39,7 +35,6 @@ const getTickets = async (req, res) => {
         const [results, metadata] = await sequelize.query(
             GET_TICKETS
         )
-
         res.json(results)
         console.log('Obtenemos los siguientes datos');
         console.log(results)
