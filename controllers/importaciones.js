@@ -1,4 +1,5 @@
 const sequelize = require("../database/db");
+const { Importacion } = require("../helpers/querys");
 const Importaciones = require('../models/importaciones')
 
 const createImportacion = async (req, res) => {
@@ -27,17 +28,47 @@ const createImportacion = async (req, res) => {
     }
 }
 
+// const getImportaciones = async (req, res) => {
+//     const { token } = req.headers
+
+//     try {
+//         if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+
+//         const importaciones = await Importaciones.findAll()
+//         if (importaciones) {
+//             return res.status(200).json({
+//                 ok: true,
+//                 content: importaciones,
+//                 message: "Importaciones obtenidas correctamente"
+//             })
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(500).json({
+//             ok: false,
+//             content: error,
+//             message: "Error al obtener las importaciones"
+//         })
+//     }
+// }
+
 const getImportaciones = async (req, res) => {
     const { token } = req.headers
 
     try {
-        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
 
-        const importaciones = await Importaciones.findAll()
-        if (importaciones) {
+        
+
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const [results, metadata] = await sequelize.query(
+            Importacion
+        )
+
+        if (results) {
             return res.status(200).json({
                 ok: true,
-                content: importaciones,
+                content: results,
                 message: "Importaciones obtenidas correctamente"
             })
         }

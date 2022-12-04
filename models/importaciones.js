@@ -33,8 +33,8 @@ const Importaciones = sequelize.define('importaciones', {
     },
     articulos: {
         type: DataTypes.STRING
-    }, 
-    cantidad:{
+    },
+    cantidad: {
         type: DataTypes.INTEGER,
         defaultValue: 1
     }

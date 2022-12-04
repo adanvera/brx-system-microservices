@@ -16,6 +16,8 @@ const MINERS_SUMMARY = 'SELECT MONTH(created_at) AS monthdate, count(*) as canti
 const GET_OPERATIONS_BY_CLIENT = "SELECT * FROM operations WHERE id_client = ?"
 const GET_COUNT_USER = '  '
 
+const Importacion = 'SELECT id_importacion, id_cliente, id_proveedor, empresa_envio, tracking_number, valor_envio, fecha_envio, fecha_arribo, comentario_importacion, articulos, canitdad FROM gestionagil_prodDB.importaciones'
+
 
 
 module.exports = {
@@ -34,5 +36,6 @@ module.exports = {
     GET_OPERATIONS_BY_CLIENT,
     TICKET_SUMMARY,
     MINERS_SUMMARY,
-    GET_COUNT_USER
+    GET_COUNT_USER,
+    Importacion
 }
