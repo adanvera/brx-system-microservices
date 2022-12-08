@@ -3,6 +3,7 @@ const { GET_OPERATIONS_BY_CLIENT } = require("../helpers/querys");
 const { checkToken } = require("../helpers/verifyToken");
 const Client = require("../models/client");
 const Operation = require("../models/operation");
+const { sendVoucherOperations } = require("./SendMailer");
 
 const addOperation = async (req,res) => {
     const { token } = req.headers
@@ -15,6 +16,7 @@ const addOperation = async (req,res) => {
         const existClient = await Client.findOne({where:{id_client}})
         if(!existClient) return res.status(400).json({msg:`cliente no  existecon codigo ${id_client} no existe `})
         const operation = await Operation.create(req.body)
+        await sendVoucherOperations(operation,existClient)
         res.json({
             operation,
             msg:'Operacion creada correctamente'

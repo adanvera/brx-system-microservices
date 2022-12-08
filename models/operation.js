@@ -1,4 +1,4 @@
-const { INTEGER, DataTypes } = require("sequelize");
+const { INTEGER, DataTypes, Sequelize } = require("sequelize");
 const sequelize = require("../database/db");
 
 const Operation = sequelize.define('operations',{
@@ -26,7 +26,7 @@ const Operation = sequelize.define('operations',{
         type:DataTypes.STRING
     },
     created:{
-        type:DataTypes.DATE
+        type:DataTypes.DATE,
     }
 },{
     timestamps: false
