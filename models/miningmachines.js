@@ -7,10 +7,10 @@ const Mining = sequelize.define('miningmachines', {
         autoIncrement: true,
         primaryKey: true
     },
-    created_at:{
+    created_at: {
         type: DataTypes.DATE,
     },
-    ip:{
+    ip: {
         type: DataTypes.STRING,
     },
     machine_name: {
@@ -44,7 +44,11 @@ const Mining = sequelize.define('miningmachines', {
     },
     uptime: {
         type: DataTypes.INTEGER
-    }
+    },
+    historialMantenience: {
+        type: DataTypes.STRING,
+        defaultValue: null
+    },
 }, {
     timestamps: false
 })
