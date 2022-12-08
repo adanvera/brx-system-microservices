@@ -1,22 +1,39 @@
-const { INTEGER, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-const Machines = sequelize.define('model_machines', {
-    id_model: {
+const Machines = sequelize.define('machines', {
+    id: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+        unique: true,
+        allowNull: false
+    },
+    name: {
+        type: DataTypes.STRING
+    },
+    url: {
+        type: DataTypes.STRING
+    },
+    type: {
+        type: DataTypes.STRING
+    },
+    brand: {
+        type: DataTypes.STRING
+    },
+    algorithms: {
+        type: DataTypes.STRING
+    },
+    specs: {
+        type: DataTypes.STRING
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
+    status: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    description_model: {
-        type: DataTypes.STRING
-    },
-    brand_machine: {
-        type: DataTypes.STRING
-    },
-    consume_machine: {
-        type: DataTypes.STRING
+        defaultValue: 1
     }
-
 }, {
     timestamps: false
 })

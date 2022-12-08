@@ -15,7 +15,10 @@ class Server {
             tickets: '/api/tickets',
             client: '/api/client',
             images: '/api/images',
-            mining: '/api/mining'
+            mining: '/api/mining',
+            luxor: '/api/luxor/queries',
+            operation: '/api/operation',
+            importaciones: '/api/importaciones'
         }
 
         // Middlewares
@@ -45,6 +48,8 @@ class Server {
         this.app.use(this.paths.images, require('../routes/images'));
         this.app.use(this.paths.mining, require('../routes/miningmachines'))
         this.app.use(this.paths.luxor, require('../routes/Luxor'))
+        this.app.use(this.paths.operation, require('../routes/operations'))
+        this.app.use(this.paths.importaciones, require('../routes/importaciones'))
     }
 
     listen() {

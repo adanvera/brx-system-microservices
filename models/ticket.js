@@ -23,6 +23,8 @@ const Ticket = sequelize.define('tickets', {
     updated_at: { type: DataTypes.DATE },
     ticket_comments: {
         type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null
     },
     priority: {
         type: DataTypes.STRING,
@@ -32,6 +34,9 @@ const Ticket = sequelize.define('tickets', {
     },
     assigned_to: {
         type: DataTypes.INTEGER,
+    },
+    ticket_historial: {
+        type: DataTypes.STRING,
     }
 }, {
     timestamps: false
