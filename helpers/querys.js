@@ -16,7 +16,7 @@ const MINERS_SUMMARY = 'SELECT MONTH(created_at) AS monthdate, count(*) as canti
 const GET_OPERATIONS_BY_CLIENT = "SELECT * FROM operations WHERE id_client = ?"
 const GET_COUNT_USER = '  '
 
-const Importacion = 'SELECT id_importacion, id_cliente, id_proveedor, empresa_envio, tracking_number, valor_envio, fecha_envio, fecha_arribo, comentario_importacion, articulos, canitdad FROM gestionagil_prodDB.importaciones'
+const Importacion = 'SELECT impor.id_importacion, impor.id_cliente, CONCAT(  client.name , " ",client.last_name ) as client,impor.id_proveedor, impor.empresa_envio, impor.tracking_number, impor.valor_envio, impor.fecha_envio, impor.comentario_importacion, impor.articulos, impor.cantidad, impor.fecha_arribo, impor.created_at, impor.updated_at FROM gestionagil_prodDB.importaciones impor JOIN gestionagil_prodDB.clients client  ON impor.id_cliente = client.id_client '
 
 
 

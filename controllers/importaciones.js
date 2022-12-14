@@ -1,5 +1,5 @@
 const sequelize = require("../database/db");
-const { Importacion } = require("../helpers/querys");
+const { Importacion, MINERS_SUMMARY } = require("../helpers/querys");
 const { checkToken } = require("../helpers/verifyToken");
 const Importaciones = require('../models/importaciones')
 
@@ -26,8 +26,13 @@ const getImportaciones = async (req, res) => {
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-        const importacion = await Importaciones.findAll();
-        res.json(importacion)
+        
+        const [results, metadata] = await sequelize.query(
+            Importacion
+        )
+
+        res.json(results)
+        
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -53,4 +58,6 @@ module.exports = {
     getImportaciones,
     getImportacionesById
 }
+
+
 
