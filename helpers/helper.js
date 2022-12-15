@@ -24,7 +24,19 @@ const gettingClientByDocuemnt = async (document) => {
     }
 }
 
+const gettingClientById = async (id_client) => {
+    try {
+        console.log("iniciamos consulta de usuario");
+        if (!id_client) return res.status(400).json({ msg: `Se requiere el id del usuario` });
+        const client = await Client.findOne({ where: { id_client: id_client } });
+        return (client.dataValues)
+    } catch (error) {
+        return console.log(error);
+    }
+}
+
 module.exports = {
     gettingUseData,
-    gettingClientByDocuemnt
+    gettingClientByDocuemnt,
+    gettingClientById
 }
