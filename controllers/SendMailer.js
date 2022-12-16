@@ -280,7 +280,7 @@ const sendVoucherOperations = async (operation, cliente) => {
     // send mail with defined transport object
     let info = await transporter.sendMail({
         from: '"Operaciones" <notificaciones@brxsgo.com>', // sender address
-        to: "marcecinco@fpuna.edu.py", // list of receivers
+        to: cliente.email , // list of receivers
         subject: "Comprobante", // Subject line
         text: "Comprobante", // plain text body
         html: registerForm, // html body
