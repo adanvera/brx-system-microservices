@@ -111,12 +111,33 @@ const deleteImportaciones = async (req, res) => {
     }
 }
 
+const updateImportaciones = async (req, res) => {
+    const { token } = req.headers
+    const { id } = req.params
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+
+        const importacion = await Importaciones.findOne({ where: { id_importacion: id } });
+        if (!importacion) return res.status(400).json({ msg: `No existe la importación con el id ${id}` });
+
+        await importacion.update(req.body)
+
+        res.json({ msg: `La importación con el id ${id} fue actualizada` })
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     createImportacion,
     getImportaciones,
     getImportacionesById,
     verifyImportArrival,
-    deleteImportaciones
+    deleteImportaciones,
+    updateImportaciones
 }
 
 

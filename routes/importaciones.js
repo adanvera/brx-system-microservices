@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { createImportacion, getImportaciones,getImportacionesById, verifyImportArrival, deleteImportaciones
+const { createImportacion, getImportaciones,getImportacionesById, verifyImportArrival, deleteImportaciones, updateImportaciones
 } = require('../controllers/importaciones')
 
 const router = Router();
@@ -9,6 +9,7 @@ router.get(`/`, getImportaciones)
 router.get(`/:id`, getImportacionesById)
 router.get(`/get/arrival`, verifyImportArrival)
 router.delete(`/:id`, deleteImportaciones)
+router.put(`/:id`, updateImportaciones)
 
 
 module.exports = router
