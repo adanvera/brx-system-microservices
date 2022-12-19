@@ -75,12 +75,10 @@ const verifyImportArrival = async (req, res) => {
             const resta = fechaArribo - fechaActual
             const dias = Math.floor(resta / (1000 * 60 * 60 * 24))
             if (dias <= 4) {
-
                 const client = await Client.findOne({ where: { id_client: importacion.id_cliente } });
                 const clientMail = client.dataValues.email
-
+                importaciones.days = dias
                 sendNotificationImportation(importacion.articulos, dias, clientMail)
-                // console.log(importacion.id_importacion + "  ___ " + dias + " falta dias para que llegue la importación");
             }
         });
 

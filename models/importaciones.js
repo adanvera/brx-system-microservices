@@ -44,6 +44,10 @@ const Importaciones = sequelize.define('importaciones', {
     },
     historial: {
         type: DataTypes.STRING
+    },
+    days: {
+        type: DataTypes.INTEGER,
+        defaultValue: null
     }
 }, {
     timestamps: false

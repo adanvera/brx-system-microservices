@@ -19,7 +19,8 @@ class Server {
             luxor: '/api/luxor/queries',
             operation: '/api/operation',
             importaciones: '/api/importaciones',
-            proveedores: '/api/proveedores'
+            proveedores: '/api/proveedores',
+            gastos: '/api/gastos',
         }
 
         // Middlewares
@@ -52,6 +53,7 @@ class Server {
         this.app.use(this.paths.operation, require('../routes/operations'))
         this.app.use(this.paths.importaciones, require('../routes/importaciones'))
         this.app.use(this.paths.proveedores, require('../routes/proveedores'))
+        this.app.use(this.paths.gastos, require('../routes/gastos'))
     }
 
     listen() {
