@@ -5,6 +5,8 @@ const Client = require("../models/client");
 const Operation = require("../models/operation");
 const { sendVoucherOperations } = require("./SendMailer");
 
+
+
 const addOperation = async (req,res) => {
     const { token } = req.headers
     const id_client = req.body.id_client
@@ -89,9 +91,77 @@ const getAllOperations = async (req,res)=>{
         
 
 }
+const extractOperations = async (req,res)=>{
+    const { token } = req.headers
+    const { id } = req.params 
+    console.log("Recibimos parametros", id, token);
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        
+        
+        let listExtract = []
+        
+        const [results, metadata] = await sequelize.query(
+            GET_OPERATIONS_BY_CLIENT,{
+            replacements:[ Number(id)]}
+        );
+        
+        //cambiamos el formato
+        /* results.map( op =>{
+            if(op.type === "1"){
+                op.type = "Compra"
+            }else{
+                op.type = "Venta"
+            }
+        }) */
+        results.forEach(( op )=>{
+            let extract = {
+                operation:'',
+                cliente:'',
+                compra:'',
+                venta:'',
+                comision:'',
+                moneda:'',
+                fecha:'',
+            
+            }
+            console.log(op);
+            
+            extract.fecha = op.created.toISOString().replace(/T/, ' ').      // replace T with a space
+            replace(/\..+/, '')
+            extract.moneda = "USD"
+            extract.operation = op.id_operations
+            extract.cliente = id
+            extract.comision = op.commission
+            if(op.type === "1"){
+                extract.compra = op.amount
+                extract.venta = 0
+            }else{
+                extract.compra = 0
+                extract.venta = op.amount
+            }
+            listExtract.push(extract)
+            console.log(listExtract);
+        })
+        console.log("Lista cargada");
+        console.log(listExtract);
+        res.json(listExtract)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg:'Ocurrio un error inesperado'
+        })
+    }
+        
+
+}
 
 module.exports = {
     addOperation,
     getAllOperationsByClient,
-    getAllOperations
+    getAllOperations,
+    extractOperations
 }
