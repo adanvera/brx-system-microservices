@@ -75,10 +75,19 @@ const verifyImportArrival = async (req, res) => {
             const resta = fechaArribo - fechaActual
             const dias = Math.floor(resta / (1000 * 60 * 60 * 24))
             if (dias <= 4) {
+                const tracking_number = importacion.tracking_number
+                const dateToArrival = importacion.fecha_arribo
                 const client = await Client.findOne({ where: { id_client: importacion.id_cliente } });
                 const clientMail = client.dataValues.email
-                importaciones.days = dias
-                sendNotificationImportation(importacion.articulos, dias, clientMail)
+                console.log("actualizando dias");
+                const id_aux = importacion.id_importacion
+                const impp = await Importaciones.findOne({ where: { id_importacion: id_aux } });
+                if (!impp) return res.status(400).json({ msg: `No existe la importación con el id ${id_aux}` });
+                console.log("actualizando dias");
+                await impp.update({ days: dias })
+                console.log("actualizando dias fin");
+                sendNotificationImportation(importacion.articulos, dias, clientMail, tracking_number, dateToArrival)
+                console.log("Envio notifgicacion");
             }
         });
 

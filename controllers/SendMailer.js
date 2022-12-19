@@ -280,7 +280,7 @@ const sendVoucherOperations = async (operation, cliente) => {
     // send mail with defined transport object
     let info = await transporter.sendMail({
         from: '"Operaciones" <notificaciones@brxsgo.com>', // sender address
-        to: cliente.email , // list of receivers
+        to: cliente.email, // list of receivers
         subject: "Comprobante", // Subject line
         text: "Comprobante", // plain text body
         html: registerForm, // html body
@@ -288,20 +288,23 @@ const sendVoucherOperations = async (operation, cliente) => {
 
 }
 
-const sendNotificationImportation = async (importacion, dias, email) => {
-    
+const sendNotificationImportation = async (importacion, dias, email, tracking_number, fechaArribo) => {
 
+    /**parsear string a json */
     const articleData = JSON.parse(importacion);
-
-
-    console.log(articleData[0].id);
-
-    /**reemplazar [] y {} por espacios en string */
-
-    // const importFiltered = importacion.replace(/[\[\]']+/g, '').replace(/[\{\}']+/g, '');
-
-    // console.log("filtered: ",importFiltered);
-
+    const specs = articleData[0].specs.replace(/[\[\]']+/g, '').replace(/[\{\}']+/g, '')
+    const algorithms = articleData[0].algorithms.replace(/[\[\]']+/g, '').replace(/[\{\}']+/g, '')
+    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const d = new Date(fechaArribo);
+    let name = month[d.getMonth()];
+    let day = d.getDate();
+    let year = d.getFullYear();
+    const dateArrival = day + "/" + name + "/" + year
+    const actualDate = new Date()
+    const nameactual = month[actualDate.getMonth()];
+    let dayactual = actualDate.getDate();
+    let yearactual = actualDate.getFullYear();
+    const dateActual = dayactual + "/" + nameactual + "/" + yearactual
 
     const importForm =
         `
@@ -312,20 +315,27 @@ const sendNotificationImportation = async (importacion, dias, email) => {
                 data-bit="iit" />
         </div>
         <div class="texthead">
-            <h1>Importación por llegar</h1>
+            <h1>Importación nro ${tracking_number}</h1>
+        </div>3.
+        <div class="cont" style=" border-radius: 8px;">
+            <h4>
+            ${(dateArrival === dateActual) ? 'Se notifica que tu importación ha llegado' :
+            'Se notifica que tu importación llegará en ' + dias + ' días'
+        }
+            </h4>
         </div>
         <div class="cont" style=" border-radius: 8px;">
-            <h6>Arribo de importación en llega en ${dias} días </h6>
-        </div>
-        <div class="cont" style=" border-radius: 8px;">
-            <h6>Se notifica que tu importación:</h6>
+            <h6>Detalles de importación:</h6>
             <div class="msg" style="border: 1px solid #008F8F;; border-radius: 8px; text-align: initial;
             padding-left: 20px;">
-                
+                <p> Marca: ${articleData[0].brand}</p>
+                <p> Especificaciones: ${specs}</p>
+                <p> Algoritmos: ${algorithms}</p>
         </div>
     `
 
-    console.log("Se hace envio de notificación");
+    console.log("Se hace envio de notificación a " + email)
+    console.log("Faltando " + dias + " días para el arribo de la importación");
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         host: "mail.brxsgo.com",
