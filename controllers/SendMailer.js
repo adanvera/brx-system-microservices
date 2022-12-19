@@ -253,7 +253,7 @@ const sendVoucherOperations = async (operation, cliente) => {
             <div class="cont" style=" border-radius: 8px;">
                 <div class="msg" style="border: 1px solid #008F8F;; border-radius: 8px; text-align: initial;
                 padding-left: 20px;">
-                <p> Operacion Nro: ${'00000' + operation.id_operations}</p>
+                <p> Operacion Nro: ${operation.id_operations}</p>
                     <p> Cliente: ${cliente.document}</p>
                     <p> Nombre y apellido: ${cliente.name + ' ' + cliente.last_name}</p>
                     <p> Direccion: ${cliente.address}</p>
