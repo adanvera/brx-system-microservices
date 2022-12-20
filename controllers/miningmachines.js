@@ -148,11 +148,36 @@ const updateToMantenience = async (req, res) => {
     }
 }
 
+const updateMiningMachineStatus = async (req, res) => {
+    const { token } = req.headers
+    const { id } = req.params
+    const { status } = req.body
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+
+        const miningmachines = await Mining.update({
+            status: status
+        }, {
+            where: {
+                id_machine: id
+            }
+        })
+
+        res.json(miningmachines)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getMiningMachines,
     addMinero,
     getminerobyid,
     miningSummary,
     getMachineByDocument,
-    updateToMantenience
+    updateToMantenience,
+    updateMiningMachineStatus
 }
