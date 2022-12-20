@@ -3,7 +3,7 @@ const { checkToken } = require("../helpers/verifyToken");
 const Mining = require("../models/miningmachines")
 const { GET_MINING_MACHINES, MINERS_SUMMARY } = require("../helpers/querys");
 const { gettingClientByDocuemnt } = require("../helpers/helper");
-const { sendMailMaintenance } = require("./SendMailer");
+const { sendMailMaintenance, sendMailMaintenanceRestore } = require("./SendMailer");
 
 const getMiningMachines = async (req, res) => {
     const { token } = req.headers
@@ -158,6 +158,11 @@ const updateMiningMachineStatus = async (req, res) => {
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
 
+        const clientMachineData = await Mining.findOne({ where: { id_machine: id } })
+        const machine = clientMachineData.dataValues
+        const dataClient = await gettingClientByDocuemnt(clientMachineData.dataValues.document)
+        const clientMail = dataClient.email
+
         const miningmachines = await Mining.update({
             status: status
         }, {
@@ -165,6 +170,9 @@ const updateMiningMachineStatus = async (req, res) => {
                 id_machine: id
             }
         })
+
+        await sendMailMaintenanceRestore(clientMail , machine)
+
 
         res.json(miningmachines)
     } catch (error) {
