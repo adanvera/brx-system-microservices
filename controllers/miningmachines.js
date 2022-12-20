@@ -132,15 +132,18 @@ const updateToMantenience = async (req, res) => {
         const dataClient = await gettingClientByDocuemnt(clientMachineData.dataValues.document)
         const clientMail = dataClient.email
 
+        const numberToMantenience = historialMantenience + 1
+
         const miningmachines = await Mining.update({
-            status: Number(3)
+            status: Number(3),
+            historialMantenience: numberToMantenience
         }, {
             where: {
                 id_machine: id
             }
         })
 
-        await sendMailMaintenance(clientMail , machine)
+        await sendMailMaintenance(clientMail, machine)
 
         res.json(miningmachines)
     } catch (error) {
@@ -171,7 +174,7 @@ const updateMiningMachineStatus = async (req, res) => {
             }
         })
 
-        await sendMailMaintenanceRestore(clientMail , machine)
+        await sendMailMaintenanceRestore(clientMail, machine)
 
 
         res.json(miningmachines)
