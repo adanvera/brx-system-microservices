@@ -122,11 +122,31 @@ const ticketSummary = async (req, res) => {
     }
 }
 
+const getTicketsByIdMachine = async (req, res) => {
+    const { token } = req.headers
+    const { id: id_machine } = req.params
+
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        const tickets = await Ticket.findAll({ where: { id_machine: id_machine } });
+        res.json(tickets)
+        console.log('Obtenemos los siguientes datos');
+        console.log(tickets)
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getTickets,
     getTicketById,
     createTicket,
     modifyTicket,
     deleteTicket,
-    ticketSummary
+    ticketSummary,
+    getTicketsByIdMachine
 }
