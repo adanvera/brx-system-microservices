@@ -132,7 +132,7 @@ const updateToMantenience = async (req, res) => {
         const dataClient = await gettingClientByDocuemnt(clientMachineData.dataValues.document)
         const clientMail = dataClient.email
 
-        const numberToMantenience = historialMantenience + 1
+        const numberToMantenience = clientMachineData.historialMantenience + 1
 
         const miningmachines = await Mining.update({
             status: Number(3),
