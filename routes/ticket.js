@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getTickets, getTicketById, createTicket, modifyTicket, deleteTicket, ticketSummary } = require('../controllers/tickets');
+const { getTickets, getTicketById, createTicket, modifyTicket, deleteTicket, ticketSummary, getTicketsByIdMachine } = require('../controllers/tickets');
 
 const router = Router();
 
@@ -9,5 +9,6 @@ router.get('/:id', getTicketById);
 router.put('/:id', modifyTicket)
 router.delete('/:id', deleteTicket)
 router.get('/get/summary', ticketSummary)
+router.get('/get/machines/:id', getTicketsByIdMachine)
 
 module.exports = router;

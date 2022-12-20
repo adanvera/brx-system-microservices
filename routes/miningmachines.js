@@ -11,7 +11,6 @@ router.get('/get/summary', miningSummary)
 router.get('/get/summary/:document', getMachineByDocument)
 router.put('/mantenience/:id', updateToMantenience)
 router.put('/:id', updateMiningMachineStatus)
-router.get('/get/machines/:id', getTicketsByIdMachine)
 
 
 module.exports = router;
