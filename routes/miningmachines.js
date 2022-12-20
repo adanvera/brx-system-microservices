@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getMiningMachines, addMinero, getminerobyid, miningSummary, getMachineByDocument, updateToMantenience } = require('../controllers/miningmachines');
+const { getMiningMachines, addMinero, getminerobyid, miningSummary, getMachineByDocument, updateToMantenience, updateMiningMachineStatus } = require('../controllers/miningmachines');
 
 const router = Router();
 
@@ -9,6 +9,7 @@ router.get('/:id', getminerobyid)
 router.get('/get/summary', miningSummary)
 router.get('/get/summary/:document', getMachineByDocument)
 router.put('/mantenience/:id', updateToMantenience)
+router.put('/:id', updateMiningMachineStatus)
 
 
 module.exports = router;
