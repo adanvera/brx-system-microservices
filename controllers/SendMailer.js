@@ -243,6 +243,14 @@ const sendMailMaintenance = async (email, machine) => {
 
 
 const sendMailMaintenanceRestore = async (email, machine) => {
+
+    const parseMachine = JSON.parse(machine?.machinedata);
+
+    const parseData = (data, dataId) => {
+        return dataId + " - " + data?.name
+    }
+
+
     const notificationForm =
         `
         <div class=""
@@ -258,9 +266,7 @@ const sendMailMaintenanceRestore = async (email, machine) => {
             <h6>Se ha ingresado en producción nuevamente la maquina:</h6>
             <div class="msg" style="border: 1px solid #008F8F;; border-radius: 8px; text-align: initial;
             padding-left: 20px;">
-                <p>ID: ${machine.id_machine}</p>
-                <p>Nombre: ${machine.machine_name}</p>
-
+             <p>Detalles: ${parseData(parseMachine[0], machine.id_machine)}</p>
                 </div>
         </div>
 
