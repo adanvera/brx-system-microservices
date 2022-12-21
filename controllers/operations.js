@@ -124,7 +124,8 @@ const extractOperations = async (req,res)=>{
                 compra:'',
                 venta:'',
                 comision:'',
-                moneda:'',
+                btc:'',
+                usdt:'',
                 fecha:'',
             
             }
@@ -132,7 +133,8 @@ const extractOperations = async (req,res)=>{
             
             extract.fecha = op.created.toISOString().replace(/T/, ' ').      // replace T with a space
             replace(/\..+/, '')
-            extract.moneda = "USD"
+            extract.btc = op.btc
+            extract.usdt = op.usdt
             extract.operation = op.id_operations
             extract.cliente = id
             extract.comision = op.commission
@@ -196,7 +198,8 @@ const extractOperationsByDate = async (req,res)=>{
                 compra:'',
                 venta:'',
                 comision:'',
-                moneda:'',
+                btc:'',
+                usdt:'',
                 fecha:'',
             
             }
@@ -204,7 +207,8 @@ const extractOperationsByDate = async (req,res)=>{
             
             extract.fecha = op.created.toISOString().replace(/T/, ' ').      // replace T with a space
             replace(/\..+/, '')
-            extract.moneda = "USD"
+            extract.btc = op.btc
+            extract.usdt = op.usdt
             extract.operation = op.id_operations
             extract.cliente = id
             extract.comision = op.commission
