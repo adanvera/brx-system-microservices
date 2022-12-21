@@ -27,6 +27,12 @@ const Operation = sequelize.define('operations',{
     },
     created:{
         type:DataTypes.DATE,
+    },
+    btc:{
+        type:DataTypes.STRING
+    },
+    usdt:{
+        type:DataTypes.STRING
     }
 },{
     timestamps: false
