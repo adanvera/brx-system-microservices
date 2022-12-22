@@ -288,7 +288,7 @@ const getCoinsByDay = async (req, res) => {
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-        const [results, metadata] = await sequelize.query('SELECT id_machine , SUM(CAST(amount  as float)) amount_day , created_at FROM gestionagil_prodDB.coinminings WHERE CAST(created_at AS DATE) = CURDATE()GROUP BY id_machine ')
+        const [results, metadata] = await sequelize.query('SELECT id_machine , SUM(CAST(amount  as float)) amount_day , created_at, updated_at FROM gestionagil_prodDB.coinminings WHERE CAST(created_at AS DATE) = CURDATE()GROUP BY id_machine ')
         res.json(results)
     } catch (error) {
         return res.status(500).json({ message: error.message });
