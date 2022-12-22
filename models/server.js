@@ -31,14 +31,29 @@ class Server {
     }
 
 
-
     middlewares() {
+
+
+        const whitelist = ['http://brxsgo.com/', 'http://localhost:3000/', 'backend.brxsgo.com/']
+
+        const corsOptions = {
+            origin: (origin, callback) => {
+                if (whitelist.indexOf(origin) !== -1) {
+                    callback(null, true)
+                } else {
+                    callback(new Error())
+                }
+            }
+        }
+
+
         // CORS
         app.use(cors({
-            origin: 'http://localhost:3000/', // allow to server to accept request from different origin
-            methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-            credentials: true // allow session cookie from browser to pass through
+            origin: '*'
         }));
+
+
+
         // Lectura y parseo del body
         this.app.use(express.json());
         // Directorio Público
