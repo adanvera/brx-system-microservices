@@ -227,11 +227,15 @@ const calculateMiningCoins = async (req, res) => {
             const sha = machine?.speed / zeros
             const dataSpeed = Number(sha)
             const status = machine.status
-            const updated_at = new Date(machine.updated_at)
+            const updated_at = new Date(machine.uptime)
             const diffDateBetweenUpdate = dateNow.getTime() - updated_at.getTime()
             const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
             console.log("minutesBetweenUpdate", minutesBetweenUpdate);
             console.log("status", status);
+
+            /**funcion math random de 90 a 100 */
+            const tempmax = Math.floor(Math.random() * (100 - 90) + 90)
+
 
             if (minutesBetweenUpdate >= 60 && status === 0) {
 
@@ -252,6 +256,16 @@ const calculateMiningCoins = async (req, res) => {
 
                 const bitcoinRevenueDay = response?.coins?.Bitcoin.btc_revenue24
                 const bitcoinRevenuePerHour = bitcoinRevenueDay
+
+
+                await Mining.update({
+                    status: 0,
+                    tempmax: tempmax,
+                }, {
+                    where: {
+                        id_machine: machine.id_machine
+                    }
+                })
 
                 try {
                     await CoinMining.create({

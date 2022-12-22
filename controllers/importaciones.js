@@ -58,17 +58,10 @@ const getImportacionesById = async (req, res) => {
 }
 
 const verifyImportArrival = async (req, res) => {
-    const { token } = req.headers
+    
     try {
-        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
-        //verificamos el token si es valido o no ha expirado
-        const isToken = await checkToken(token)
-        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-
         const importaciones = await Importaciones.findAll()
-
         /**verificar si fecha de arribo falta menos de 4 dias */
-
         importaciones.forEach(async (importacion) => {
             const fechaArribo = new Date(importacion.fecha_arribo)
             const fechaActual = new Date()
@@ -90,9 +83,7 @@ const verifyImportArrival = async (req, res) => {
                 console.log("Envio notifgicacion");
             }
         });
-
         res.json("notificaciones enviadas")
-
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
