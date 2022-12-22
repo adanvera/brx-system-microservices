@@ -22,7 +22,8 @@ class Server {
             proveedores: '/api/proveedores',
             gastos: '/api/gastos',
             energias: '/api/energias',
-            consumos: '/api/consumos'
+            consumos: '/api/consumos',
+            coinmining: '/api/coinmining',
         }
 
         // Middlewares
@@ -58,6 +59,7 @@ class Server {
         this.app.use(this.paths.gastos, require('../routes/gastos'))
         this.app.use(this.paths.energias, require('../routes/Energias'))
         this.app.use(this.paths.consumos, require('../routes/consumos'))
+        this.app.use(this.paths.coinmining, require('../routes/coinmining'))
     }
 
     listen() {
