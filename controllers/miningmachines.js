@@ -230,12 +230,9 @@ const calculateMiningCoins = async (req, res) => {
             const updated_at = new Date(machine.uptime)
             const diffDateBetweenUpdate = dateNow.getTime() - updated_at.getTime()
             const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
-            console.log("minutesBetweenUpdate", minutesBetweenUpdate);
-            console.log("status", status);
 
             /**funcion math random de 90 a 100 */
             const tempmax = Math.floor(Math.random() * (100 - 90) + 90)
-
 
             if (minutesBetweenUpdate >= 60 && status === 0) {
 
@@ -272,14 +269,12 @@ const calculateMiningCoins = async (req, res) => {
                         amount: bitcoinRevenuePerHour,
                         type: "HOUR",
                     })
-
                 } catch (error) {
                     return console.log(error.message);
                 }
             }
         })
-
-        res.json(results)
+        res.json("se actualizo listado de mining coins")
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
