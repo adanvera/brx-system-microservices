@@ -37,22 +37,17 @@ class Server {
         const whitelist = ['http://brxsgo.com/', 'http://localhost:3000/', 'backend.brxsgo.com/']
 
         const corsOptions = {
-            origin: (origin, callback) => {
-                if (whitelist.indexOf(origin) !== -1) {
+            origin: function (origin, callback) {
+                if (!origin || whitelist.indexOf(origin) !== -1) {
                     callback(null, true)
                 } else {
-                    callback(new Error())
+                    callback(new Error("Not allowed by CORS"))
                 }
-            }
+            },
+            credentials: true,
         }
 
-
-        // CORS
-        app.use(cors({
-            origin: '*'
-        }));
-
-
+        app.use(cors(corsOptions))
 
         // Lectura y parseo del body
         this.app.use(express.json());
