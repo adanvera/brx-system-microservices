@@ -332,7 +332,7 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
         const diffDateBetweenUpdate = dateNow.getTime() - update_at.getTime()
         const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
 
-        if (minutesBetweenUpdate >= 1440) {
+        if (minutesBetweenUpdate >= 1440 && machine.status === 0) {
             try {
                 await Consumos.create({
                     id_machine: machine.id_machine,
