@@ -7,6 +7,7 @@ const { sendMailMaintenance, sendMailMaintenanceRestore } = require("./SendMaile
 const fetch = require('node-fetch');
 const { FLOAT } = require("sequelize");
 const CoinMining = require("../models/CoinMining");
+const Consumos = require("../models/Consumos");
 
 const getMiningMachines = async (req, res) => {
     const { token } = req.headers
@@ -313,6 +314,38 @@ const getCoinsByHourById = async (req, res) => {
     }
 }
 
+const calculateConsumeMachinePowerByDay = async (req, res) => {
+    const { token } = req.headers
+    const mining = await Mining.findAll({ where: { status: 0 } })
+
+    mining.forEach(async (machine) => {
+
+        const id_machine = machine.id_machine
+        const consume_machine = machine.consume_machine
+        const div = (consume_machine * 24) / 1000
+        const values = div * 0.05
+        /**retornar con dos decimales */
+        const valuesFixed = values.toFixed(2)
+
+        const update_at = new Date(machine.uptime)
+        const dateNow = new Date()
+        const diffDateBetweenUpdate = dateNow.getTime() - update_at.getTime()
+        const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
+
+        if (minutesBetweenUpdate >= 1440) {
+            try {
+                await Consumos.create({
+                    id_machine: machine.id_machine,
+                    status: 0,
+                    consumo: valuesFixed,
+                })
+            } catch (error) {
+                return console.log(error.message);
+            }
+        }
+    })
+}
+
 
 module.exports = {
     getMiningMachines,
@@ -325,5 +358,6 @@ module.exports = {
     deleteMiningMachine,
     calculateMiningCoins,
     getCoinsByDay,
-    getCoinsByHourById
+    getCoinsByHourById,
+    calculateConsumeMachinePowerByDay
 }
