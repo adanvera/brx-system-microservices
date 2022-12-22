@@ -1,7 +1,7 @@
 
 const sequelize = require("../database/db");
 const { checkToken } = require("../helpers/verifyToken");
-const CoinMining = require("../models/CoinMining");
+const CoinMining = require("../models/coinmining");
 
 const createCoinMining = async (req, res) => {
     const { token } = req.headers

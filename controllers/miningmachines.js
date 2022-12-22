@@ -6,7 +6,7 @@ const { gettingClientByDocuemnt } = require("../helpers/helper");
 const { sendMailMaintenance, sendMailMaintenanceRestore } = require("./SendMailer");
 const fetch = require('node-fetch');
 const { FLOAT } = require("sequelize");
-const CoinMining = require("../models/CoinMining");
+const CoinMining = require("../models/coinmining");
 const Consumos = require("../models/Consumos");
 const Energia = require("../models/Energia");
 
