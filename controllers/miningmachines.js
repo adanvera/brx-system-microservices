@@ -253,12 +253,34 @@ const calculateMiningCoins = async (req, res) => {
 
                     });
 
+                const ulr_two = "https://api.minerstat.com/v2/coins?list=BTC"
+
+                const response_two = await fetch(ulr_two, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        cors: 'no-cors'
+                    },
+                }).then(res => res.json())
+                    .then(json => {
+                        return json
+                    }
+                    ).catch(err => {
+                        console.log(err);
+
+                    });
+
                 const bitcoinRevenueDay = response?.coins?.Bitcoin.btc_revenue24
+                const price = response_two[0].price
+
                 const bitcoinRevenuePerHour = bitcoinRevenueDay / 24
+
+                const castodollar = bitcoinRevenuePerHour * price
 
                 await Mining.update({
                     status: 0,
                     tempmax: tempmax,
+                    amount_hour: bitcoinRevenuePerHour,
                 }, {
                     where: {
                         id_machine: machine.id_machine
@@ -269,6 +291,7 @@ const calculateMiningCoins = async (req, res) => {
                     await CoinMining.create({
                         id_machine: machine.id_machine,
                         amount: bitcoinRevenuePerHour,
+                        todollar: castodollar,
                         type: "HOUR",
                     })
                 } catch (error) {
@@ -380,6 +403,22 @@ const getAmountDayPower = async (req, res) => {
     }
 }
 
+
+const getConsumoMachineMiningMes = async (req, res) => {
+    const { token } = req.headers
+    const { id } = req.params
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        const [results, metadata] = await sequelize.query('SELECT id_consumo, id_machine, status, created_at, updated_at, SUM(CAST(consumo  as float)) consumo FROM gestionagil_prodDB.consumos WHERE CAST(created_at AS DATE)  BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND NOW() AND id_machine ='+id)
+        res.json(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getMiningMachines,
     addMinero,
@@ -393,5 +432,6 @@ module.exports = {
     getCoinsByDay,
     getCoinsByHourById,
     calculateConsumeMachinePowerByDay,
-    getAmountDayPower
+    getAmountDayPower,
+    getConsumoMachineMiningMes
 }
