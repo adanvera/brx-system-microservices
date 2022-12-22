@@ -8,6 +8,7 @@ const fetch = require('node-fetch');
 const { FLOAT } = require("sequelize");
 const CoinMining = require("../models/CoinMining");
 const Consumos = require("../models/Consumos");
+const Energia = require("../models/Energia");
 
 const getMiningMachines = async (req, res) => {
     const { token } = req.headers
@@ -322,12 +323,19 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
     mining.forEach(async (machine) => {
 
         const id_machine = machine.id_machine
-
         const consume_machine = machine.consume_machine
         const div = (consume_machine * 24) / 1000
-        const values = div * 0.05
+
+        const pricePower = await Energia.findAll()
+
+        const energyPrice = Number(pricePower[0]?.dataValues?.precio)
+        console.log("Precio de la energia", energyPrice);
+
+        const values = div * energyPrice
         /**retornar con dos decimales */
         const valuesFixed = values.toFixed(2)
+
+        console.log("valueeeeeeeee ", valuesFixed);
 
         const update_at = new Date(machine.uptime)
         const dateNow = new Date()
