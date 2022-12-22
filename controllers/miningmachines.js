@@ -1,7 +1,7 @@
 const sequelize = require("../database/db");
 const { checkToken } = require("../helpers/verifyToken");
 const Mining = require("../models/miningmachines")
-const { GET_MINING_MACHINES, MINERS_SUMMARY } = require("../helpers/querys");
+const { GET_MINING_MACHINES, MINERS_SUMMARY, URL_BY_HOUR_BY_ID } = require("../helpers/querys");
 const { gettingClientByDocuemnt } = require("../helpers/helper");
 const { sendMailMaintenance, sendMailMaintenanceRestore } = require("./SendMailer");
 const fetch = require('node-fetch');
@@ -280,6 +280,40 @@ const calculateMiningCoins = async (req, res) => {
     }
 }
 
+const getCoinsByDay = async (req, res) => {
+    const { token } = req.headers
+    const { id } = req.params
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        const [results, metadata] = await sequelize.query('SELECT id_machine , SUM(CAST(amount  as float)) amount_day , created_at FROM gestionagil_prodDB.coinminings WHERE CAST(created_at AS DATE) = CURDATE()GROUP BY id_machine ')
+        res.json(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+const getCoinsByHourById = async (req, res) => {
+    const { token } = req.headers
+    const { id } = req.params
+
+    const id_machine = Number(id)
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        const [results, metadata] = await sequelize.query(URL_BY_HOUR_BY_ID)
+        res.json(results)
+    }
+    catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+
 module.exports = {
     getMiningMachines,
     addMinero,
@@ -289,5 +323,7 @@ module.exports = {
     updateToMantenience,
     updateMiningMachineStatus,
     deleteMiningMachine,
-    calculateMiningCoins
+    calculateMiningCoins,
+    getCoinsByDay,
+    getCoinsByHourById
 }
