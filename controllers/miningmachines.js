@@ -257,7 +257,6 @@ const calculateMiningCoins = async (req, res) => {
                 const bitcoinRevenueDay = response?.coins?.Bitcoin.btc_revenue24
                 const bitcoinRevenuePerHour = bitcoinRevenueDay
 
-
                 await Mining.update({
                     status: 0,
                     tempmax: tempmax,

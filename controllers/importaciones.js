@@ -58,16 +58,47 @@ const getImportacionesById = async (req, res) => {
 }
 
 const verifyImportArrival = async (req, res) => {
-    
+
     try {
         const importaciones = await Importaciones.findAll()
         /**verificar si fecha de arribo falta menos de 4 dias */
         importaciones.forEach(async (importacion) => {
             const fechaArribo = new Date(importacion.fecha_arribo)
-            const fechaActual = new Date()
+            const fechaActual = new Date(Date.now());
             const resta = fechaArribo - fechaActual
             const dias = Math.floor(resta / (1000 * 60 * 60 * 24))
-            if (dias <= 4) {
+            const update_at = new Date(importacion.update_at)
+
+
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+
+            today = dd + '/' + mm + '/' + yyyy;
+
+
+            var compare = new Date(importacion.fecha_arribo)
+            var day = String(compare.getDate()).padStart(2, '0');
+            var month = String(compare.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var year = compare.getFullYear();
+
+            compare = day + '/' + month + '/' + year;
+
+            console.log(today + " " + compare);
+
+            console.log(today <= compare);
+
+            /**diferencias de dias entre today e y compare */
+            var date1 = new Date(today);
+
+            var date2 = new Date(compare);
+            var diffTime = (date2 - date1);
+            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            console.log("diferencia de dias " + dias);
+
+            if (dias <= 4 && dias >= 0) {
                 const tracking_number = importacion.tracking_number
                 const dateToArrival = importacion.fecha_arribo
                 const client = await Client.findOne({ where: { id_client: importacion.id_cliente } });
@@ -82,6 +113,8 @@ const verifyImportArrival = async (req, res) => {
                 sendNotificationImportation(importacion.articulos, dias, clientMail, tracking_number, dateToArrival)
                 console.log("Envio notifgicacion");
             }
+
+
         });
         res.json("notificaciones enviadas")
     } catch (error) {

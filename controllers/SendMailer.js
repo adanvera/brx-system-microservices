@@ -367,6 +367,11 @@ const sendNotificationImportation = async (importacion, dias, email, tracking_nu
     let yearactual = actualDate.getFullYear();
     const dateActual = dayactual + "/" + nameactual + "/" + yearactual
 
+    console.log("arrivo: " + dateArrival);
+    console.log("actual: " + dateActual);
+    const faltandias = Number(dias) + 1;
+    console.log("faltandias: " + Number(faltandias));
+
     const importForm =
         `
         <div class=""
@@ -377,11 +382,11 @@ const sendNotificationImportation = async (importacion, dias, email, tracking_nu
         </div>
         <div class="texthead">
             <h1>Importación nro ${tracking_number}</h1>
-        </div>3.
+        </div>
         <div class="cont" style=" border-radius: 8px;">
             <h4>
-            ${(dateArrival === dateActual) ? 'Se notifica que tu importación ha llegado' :
-            'Se notifica que tu importación llegará en ' + dias + ' días'
+            ${(dateArrival === dateActual && faltandias === 0) ? 'Se notifica que tu importación ha llegado' :
+            'Se notifica que tu importación llegará en ' + faltandias + ' días'
         }
             </h4>
         </div>
@@ -395,8 +400,6 @@ const sendNotificationImportation = async (importacion, dias, email, tracking_nu
         </div>
     `
 
-    console.log("Se hace envio de notificación a " + email)
-    console.log("Faltando " + dias + " días para el arribo de la importación");
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         host: "mail.brxsgo.com",
