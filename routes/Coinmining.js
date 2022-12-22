@@ -2,7 +2,7 @@
 
 
 const { Router } = require('express');
-const { getCoinMiningById } = require('../controllers/CoinMining');
+const { getCoinMiningById } = require('../controllers/coinmining');
 
 
 
