@@ -208,15 +208,9 @@ const deleteMiningMachine = async (req, res) => {
 }
 
 const calculateMiningCoins = async (req, res) => {
-    const { token } = req.headers
     try {
-        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
-        //verificamos el token si es valido o no ha expirado
-        const isToken = await checkToken(token)
-        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
 
         const miningmachines = await Mining.findAll();
-
         const [results, metadata] = await sequelize.query(GET_MINING_MACHINES
             , { where: { id_machine: 0 } })
 
@@ -237,6 +231,7 @@ const calculateMiningCoins = async (req, res) => {
             const diffDateBetweenUpdate = dateNow.getTime() - updated_at.getTime()
             const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
             console.log("minutesBetweenUpdate", minutesBetweenUpdate);
+            console.log("status", status);
 
             if (minutesBetweenUpdate >= 60 && status === 0) {
 
