@@ -316,11 +316,13 @@ const getCoinsByHourById = async (req, res) => {
 
 const calculateConsumeMachinePowerByDay = async (req, res) => {
     const { token } = req.headers
+
     const mining = await Mining.findAll({ where: { status: 0 } })
 
     mining.forEach(async (machine) => {
 
         const id_machine = machine.id_machine
+
         const consume_machine = machine.consume_machine
         const div = (consume_machine * 24) / 1000
         const values = div * 0.05
@@ -332,7 +334,8 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
         const diffDateBetweenUpdate = dateNow.getTime() - update_at.getTime()
         const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
 
-        if (minutesBetweenUpdate >= 1440 && machine.status === 0) {
+        if (minutesBetweenUpdate >= 1440) {
+
             try {
                 await Consumos.create({
                     id_machine: machine.id_machine,
@@ -342,11 +345,34 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
             } catch (error) {
                 return console.log(error.message);
             }
+
         }
-        res.json("se actualizo listado de consumo de maquinas")
     })
+
+
+
+    try {
+
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
 }
 
+
+const getAmountDayPower = async (req, res) => {
+    const { token } = req.headers
+    const { id } = req.params
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        const [results, metadata] = await sequelize.query('SELECT id_machine, created_at, updated_at,  SUM(CAST(consumo  as float)) amount_day  FROM gestionagil_prodDB.consumos WHERE CAST(created_at AS DATE) = CURDATE()GROUP BY id_machine         ')
+        res.json(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
 
 module.exports = {
     getMiningMachines,
@@ -360,5 +386,6 @@ module.exports = {
     calculateMiningCoins,
     getCoinsByDay,
     getCoinsByHourById,
-    calculateConsumeMachinePowerByDay
+    calculateConsumeMachinePowerByDay,
+    getAmountDayPower
 }

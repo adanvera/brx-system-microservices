@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { getMiningMachines, addMinero, getminerobyid, miningSummary, getMachineByDocument,
-    updateToMantenience, updateMiningMachineStatus, deleteMiningMachine, calculateMiningCoins, getCoinsByDay, getCoinsByHourById, calculateConsumeMachinePowerByDay } = require('../controllers/miningmachines');
+    updateToMantenience, updateMiningMachineStatus, deleteMiningMachine, calculateMiningCoins, getCoinsByDay, getCoinsByHourById, calculateConsumeMachinePowerByDay, getAmountDayPower } = require('../controllers/miningmachines');
 
 const router = Router();
 
@@ -16,6 +16,7 @@ router.get('/get/calculate', calculateMiningCoins)
 router.get('/get/day/coins', getCoinsByDay)
 router.get('/get/hour/coins', getCoinsByHourById)
 router.get('/get/power', calculateConsumeMachinePowerByDay)
+router.get('/get/power/amount', getAmountDayPower)
 
 
 
