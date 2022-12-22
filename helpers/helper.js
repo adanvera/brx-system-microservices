@@ -35,8 +35,15 @@ const gettingClientById = async (id_client) => {
     }
 }
 
+const insertMachineMiningAmount = async (id_machine, machinedata) => {
+
+    
+
+}
+
 module.exports = {
     gettingUseData,
     gettingClientByDocuemnt,
-    gettingClientById
+    gettingClientById,
+    insertMachineMiningAmount
 }

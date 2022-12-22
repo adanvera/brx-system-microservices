@@ -4,6 +4,9 @@ const Mining = require("../models/miningmachines")
 const { GET_MINING_MACHINES, MINERS_SUMMARY } = require("../helpers/querys");
 const { gettingClientByDocuemnt } = require("../helpers/helper");
 const { sendMailMaintenance, sendMailMaintenanceRestore } = require("./SendMailer");
+const fetch = require('node-fetch');
+const { FLOAT } = require("sequelize");
+const CoinMining = require("../models/CoinMining");
 
 const getMiningMachines = async (req, res) => {
     const { token } = req.headers
@@ -204,6 +207,76 @@ const deleteMiningMachine = async (req, res) => {
     }
 }
 
+const calculateMiningCoins = async (req, res) => {
+    const { token } = req.headers
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+
+        const miningmachines = await Mining.findAll();
+
+        const [results, metadata] = await sequelize.query(GET_MINING_MACHINES
+            , { where: { id_machine: 0 } })
+
+        results.forEach(async (machine) => {
+            const created = machine.created_at
+            /**verificar si ya paso 2 minutos despues de la ultima acutalizacion */
+            const date = new Date(created)
+            const dateNow = new Date()
+            const diff = dateNow.getTime() - date.getTime()
+            const minutes = Math.floor(diff / 1000 / 60)
+            const speed = machine
+            const consume_machine = machine.consume_machine
+            const zeros = 1000000000000
+            const sha = machine?.speed / zeros
+            const dataSpeed = Number(sha)
+            const status = machine.status
+            const updated_at = new Date(machine.updated_at)
+            const diffDateBetweenUpdate = dateNow.getTime() - updated_at.getTime()
+            const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
+            console.log("minutesBetweenUpdate", minutesBetweenUpdate);
+
+            if (minutesBetweenUpdate >= 60 && status === 0) {
+
+                const URL = "https://whattomine.com/asic.json?Authentication=none&factor[sha256_hr]=" + dataSpeed + "&sha256f=true"
+                const response = await fetch(URL, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }).then(res => res.json())
+                    .then(json => {
+                        return json
+                    }
+                    ).catch(err => {
+                        console.log(err);
+
+                    });
+
+                const bitcoinRevenueDay = response?.coins?.Bitcoin.btc_revenue24
+                const bitcoinRevenuePerHour = bitcoinRevenueDay
+
+                try {
+                    await CoinMining.create({
+                        id_machine: machine.id_machine,
+                        amount: bitcoinRevenuePerHour,
+                        type: "HOUR",
+                    })
+
+                } catch (error) {
+                    return console.log(error.message);
+                }
+            }
+        })
+
+        res.json(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 module.exports = {
     getMiningMachines,
     addMinero,
@@ -212,5 +285,6 @@ module.exports = {
     getMachineByDocument,
     updateToMantenience,
     updateMiningMachineStatus,
-    deleteMiningMachine
+    deleteMiningMachine,
+    calculateMiningCoins
 }

@@ -49,6 +49,17 @@ const Mining = sequelize.define('miningmachines', {
         type: DataTypes.STRING,
         defaultValue: null
     },
+    revenue_day: {
+        type: DataTypes.STRING,
+        defaultValue: null
+    },
+    revenue_hour: {
+        type: DataTypes.STRING,
+        defaultValue: null
+    },
+    speed: {
+        type: DataTypes.DOUBLE,
+    },
 }, {
     timestamps: false
 })
