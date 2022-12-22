@@ -49,10 +49,10 @@ class Server {
 
         this.app.use(cors(corsOptions))
 
-        // app.use((req, res, next) => {
-        //     res.header('Access-Control-Allow-Origin', '*');
-        //     next();
-        // });
+        this.app.use((req, res, next) => {
+            res.header('Access-Control-Allow-Origin', '*');
+            next();
+        });
 
         // Lectura y parseo del body
         this.app.use(express.json());
