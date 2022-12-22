@@ -241,46 +241,46 @@ const calculateMiningCoins = async (req, res) => {
 
             if (minutesBetweenUpdate >= 60 && status === 0) {
 
-                const URL = "https://whattomine.com/asic.json?Authentication=none&factor[sha256_hr]=" + dataSpeed + "&sha256f=true"
-                const response = await fetch(URL, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        cors: 'no-cors',
-                        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-                    },
-                }).then(res => res.json())
-                    .then(json => {
-                        return json
-                    }
-                    ).catch(err => {
-                        console.log(err);
+                // const URL = "https://whattomine.com/asic.json?Authentication=none&factor[sha256_hr]=" + dataSpeed + "&sha256f=true"
+                // const response = await fetch(URL, {
+                //     method: 'GET',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         cors: 'no-cors',
+                //         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                //         'Access-Control-Allow-Origin': '*',
+                //         'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+                //     },
+                // }).then(res => res.json())
+                //     .then(json => {
+                //         return json
+                //     }
+                //     ).catch(err => {
+                //         console.log(err);
 
-                    });
+                //     });
 
-                const bitcoinRevenueDay = (response?.coins?.Bitcoin.btc_revenue24)
-                const bitcoinRevenuePerHour = bitcoinRevenueDay / 24
+                // const bitcoinRevenueDay = (response?.coins?.Bitcoin.btc_revenue24)
+                // const bitcoinRevenuePerHour = bitcoinRevenueDay / 24
 
-                await Mining.update({
-                    status: 0,
-                    tempmax: tempmax,
-                }, {
-                    where: {
-                        id_machine: machine.id_machine
-                    }
-                })
+                // await Mining.update({
+                //     status: 0,
+                //     tempmax: tempmax,
+                // }, {
+                //     where: {
+                //         id_machine: machine.id_machine
+                //     }
+                // })
 
-                try {
-                    await CoinMining.create({
-                        id_machine: machine.id_machine,
-                        amount: bitcoinRevenuePerHour,
-                        type: "HOUR",
-                    })
-                } catch (error) {
-                    return console.log(error.message);
-                }
+                // try {
+                //     await CoinMining.create({
+                //         id_machine: machine.id_machine,
+                //         amount: bitcoinRevenuePerHour,
+                //         type: "HOUR",
+                //     })
+                // } catch (error) {
+                //     return console.log(error.message);
+                // }
             }
         })
         res.json("se actualizo listado de mining coins")
