@@ -343,6 +343,7 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
                 return console.log(error.message);
             }
         }
+        res.json("se actualizo listado de consumo de maquinas")
     })
 }
 
