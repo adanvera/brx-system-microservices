@@ -38,7 +38,14 @@ class Server {
         // this.app.use(cors());
 
         this.app.use(cors({
-            origin: ['http://localhost:3000/', 'http://brxsgo.com/', "https://backend.brxsgo.com/"]
+            origin: ['http://localhost:3000/', 'http://brxsgo.com/', "https://backend.brxsgo.com/"],
+            headers:{
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                "Access-Control-Allow-Credentials": "true"
+            }
+
         }));
 
 
