@@ -35,31 +35,17 @@ class Server {
 
     middlewares() {
         // CORS
-        this.app.use(cors());
-
-        // this.app.use(cors({
-        //     origin: ['http://localhost:3000/', 'http://brxsgo.com/', "https://backend.brxsgo.com/"],
-        //     headers:{
-        //         "Access-Control-Allow-Origin": "*",
-        //         "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-        //         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        //         "Access-Control-Allow-Credentials": "true"
-        //     }
-
-        // }));
-
-        // this.app.use((req,res,next)=>{
-        //     res.setHeader('Access-Control-Allow-Origin','*');
-        //     res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
-        //     res.setHeader('Access-Control-Allow-Methods','Content-Type','Authorization');
-        //     next(); 
-        // })
-
+        this.app.use(cors(
+            {
+                origin: '*',
+                methods: ['GET', 'POST', 'PUT', 'DELETE'],
+                credentials: true
+            }
+        ));
         // Lectura y parseo del body
         this.app.use(express.json());
         // Directorio Público
         this.app.use(express.static('public'));
-
     }
 
     routes() {
