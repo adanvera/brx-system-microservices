@@ -236,43 +236,7 @@ const calculateMiningCoins = async (req, res) => {
             const tempmax = Math.floor(Math.random() * (100 - 90) + 90)
 
             if (minutesBetweenUpdate >= 60 && status === 0) {
-
-                const URL = "https://whattomine.com/asic.json?Authentication=none&factor[sha256_hr]=" + dataSpeed + "&sha256f=true"
-                const response = await fetch(URL, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }).then(res => res.json())
-                    .then(json => {
-                        return json
-                    }
-                    ).catch(err => {
-                        console.log(err);
-
-                    });
-
-                const bitcoinRevenueDay = response?.coins?.Bitcoin.btc_revenue24
-                const bitcoinRevenuePerHour = bitcoinRevenueDay
-
-                await Mining.update({
-                    status: 0,
-                    tempmax: tempmax,
-                }, {
-                    where: {
-                        id_machine: machine.id_machine
-                    }
-                })
-
-                try {
-                    await CoinMining.create({
-                        id_machine: machine.id_machine,
-                        amount: bitcoinRevenuePerHour,
-                        type: "HOUR",
-                    })
-                } catch (error) {
-                    return console.log(error.message);
-                }
+                console.log("se actualizo la temperatura")
             }
         })
         res.json("se actualizo listado de mining coins")
