@@ -166,7 +166,7 @@ const extractOperations = async (req,res)=>{
 const extractOperationsByDate = async (req,res)=>{
     /* const { token } = req.headers */
     const { id } = req.params 
-    let {fechaDesde,fechaHasta} = req.body
+    let {fechaDesde,fechaHasta,typeOperation} = req.body
     console.log('Recibimos fecha');
     console.log(req.body);
     console.log("Recibimos parametros", id);
@@ -177,8 +177,15 @@ const extractOperationsByDate = async (req,res)=>{
         let listExtract = []
         fechaHasta = fechaHasta+' 23:59:00'
         fechaDesde = fechaDesde+ ' 00:00:00'
+        let query = GET_OPETARIONS_BY_DATE
+        if(typeOperation === '1'){
+            query += " AND type = 1"
+        }else if(typeOperation === '0'){
+            query += " AND type = 0"
+        }
+
         const [results, metadata] = await sequelize.query(
-            GET_OPETARIONS_BY_DATE,{
+            query,{
             replacements:[ Number(id),fechaDesde,fechaHasta]}
         );
         
