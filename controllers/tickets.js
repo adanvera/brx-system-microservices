@@ -1,10 +1,11 @@
+const { request, response } = require("express");
 const sequelize = require("../database/db");
 const { gettingUseData } = require("../helpers/helper");
 const { GET_TICKET_BY_ID, GET_TICKETS, TICKET_SUMMARY } = require("../helpers/querys");
 const { checkToken } = require("../helpers/verifyToken");
 const Ticket = require("../models/ticket");
 const { sendNotificationTkt } = require("./SendMailer");
-
+const GET_TICKET_BY_DATE = "SELECT * FROM tickets WHERE created_at BETWEEN ? AND ?"
 
 const createTicket = async (req, res = response) => {
     const { token } = req.headers
@@ -141,6 +142,67 @@ const getTicketsByIdMachine = async (req, res) => {
     }
 }
 
+const getAllTicketByDate = async (req =request,res = response)=>{
+    let {fechaDesde,fechaHasta} = req.body
+    
+    fechaHasta = fechaHasta+' 00:00:00'
+    fechaDesde = fechaDesde+' 23:59:00'
+    try {
+        const [results, metadata] = await sequelize.query(
+            GET_TICKET_BY_DATE,{
+            replacements:[ fechaDesde,fechaHasta]}
+    
+    
+        );
+        let summary = {
+            totalTicket:0,
+            openTicket:0,
+            closeTicket:0,
+            pendingTicket:0,
+            inProgressTicket:0,
+            onHoldTicket:0,
+            rma:0,
+            DESESTIMATED:0
+        }
+        summary.totalTicket = results.length
+        results.forEach(ticket =>{
+            switch (ticket.status) {
+                case 'PENDING':
+                    summary.pendingTicket++
+                    break;
+                case 'INPROGRESS':
+                    summary.inProgressTicket++
+                    break;
+                case 'ONHOLD':
+                    summary.onHoldTicket++
+                    break;
+                case 'CLOSED':
+                    summary.closeTicket++
+                    break;
+                case 'RMA':
+                    summary.rma++
+                    break; 
+                case 'DESESTIMATED':
+                    summary.DESESTIMATED++
+                    break;        
+                default:
+                    break;
+            }
+        })
+        console.log('Datos del ticket');
+        console.log(summary);
+        res.status(200).json({
+            summary
+        })    
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            msg:'Ocurrio un error'
+        })
+    }
+    
+}
+
 module.exports = {
     getTickets,
     getTicketById,
@@ -148,5 +210,6 @@ module.exports = {
     modifyTicket,
     deleteTicket,
     ticketSummary,
-    getTicketsByIdMachine
+    getTicketsByIdMachine,
+    getAllTicketByDate
 }
