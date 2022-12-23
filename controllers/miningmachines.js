@@ -412,7 +412,7 @@ const getConsumoMachineMiningMes = async (req, res) => {
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-        const [results, metadata] = await sequelize.query('SELECT id_consumo, id_machine, status, created_at, updated_at, SUM(CAST(consumo  as float)) consumo FROM gestionagil_prodDB.consumos WHERE CAST(created_at AS DATE)  BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND NOW() AND id_machine ='+id)
+        const [results, metadata] = await sequelize.query('SELECT id_consumo, id_machine, status, created_at, updated_at, SUM(CAST(consumo  as float)) consumo FROM gestionagil_prodDB.consumos WHERE YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at)  = MONTH(CURRENT_DATE()) AND id_machine =' + id)
         res.json(results)
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -427,7 +427,7 @@ const getSumCurrentMonth = async (req, res) => {
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-        const [results, metadata] = await sequelize.query('SELECT id_coinmining, id_machine, amount, created_at, updated_at, `type`, SUM(CAST(todollar  as float)) todollar  FROM gestionagil_prodDB.coinminings WHERE YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at)  = MONTH(CURRENT_DATE()) AND id_machine = '+id)
+        const [results, metadata] = await sequelize.query('SELECT id_coinmining, id_machine, amount, created_at, updated_at, `type`, SUM(CAST(todollar  as float)) todollar  FROM gestionagil_prodDB.coinminings WHERE YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at)  = MONTH(CURRENT_DATE()) AND id_machine = ' + id)
         res.json(results)
     } catch (error) {
         return res.status(500).json({ message: error.message });
