@@ -25,10 +25,8 @@ class Server {
             consumos: '/api/consumos',
             coinmining: '/api/coinmining',
         }
-
         // Middlewares
         this.middlewares();
-
         // Rutas de mi aplicación
         this.routes();
     }
