@@ -258,7 +258,7 @@ const getAllOperationsByDate = async (req = request,res =response)=>{
             totalAmountUSDTCompra:0,
             totalOperations:0,
         }
-        fechaHasta = fechaHasta+' 00:00:00'
+        fechaHasta = fechaHasta+' 23:59:00'
         fechaDesde = fechaDesde+ ' 00:00:00'
         const [results, metadata] = await sequelize.query(
             REPORT_BY_DATE,{
