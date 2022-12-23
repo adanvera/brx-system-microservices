@@ -1,9 +1,11 @@
+const { response, request } = require("express");
 const sequelize = require("../database/db");
 const { GET_OPERATIONS_BY_CLIENT, GET_OPETARIONS_BY_DATE } = require("../helpers/querys");
 const { checkToken } = require("../helpers/verifyToken");
 const Client = require("../models/client");
 const Operation = require("../models/operation");
 const { sendVoucherOperations } = require("./SendMailer");
+const REPORT_BY_DATE = "select * from operations WHERE created BETWEEN ? AND ?"
 
 
 
@@ -162,24 +164,28 @@ const extractOperations = async (req,res)=>{
 }
 
 const extractOperationsByDate = async (req,res)=>{
-    const { token } = req.headers
+    /* const { token } = req.headers */
     const { id } = req.params 
-    let {fechaDesde,fechaHasta} = req.body
+    let {fechaDesde,fechaHasta,typeOperation} = req.body
     console.log('Recibimos fecha');
     console.log(req.body);
-    console.log("Recibimos parametros", id, token);
+    console.log("Recibimos parametros", id);
     try {
-        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
-        //verificamos el token si es valido o no ha expirado
-        const isToken = await checkToken(token)
-        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        /* /*  */
         
         
         let listExtract = []
-        fechaHasta = fechaHasta+' 00:00:00'
+        fechaHasta = fechaHasta+' 23:59:00'
         fechaDesde = fechaDesde+ ' 00:00:00'
+        let query = GET_OPETARIONS_BY_DATE
+        if(typeOperation === '1'){
+            query += " AND type = 1"
+        }else if(typeOperation === '0'){
+            query += " AND type = 0"
+        }
+
         const [results, metadata] = await sequelize.query(
-            GET_OPETARIONS_BY_DATE,{
+            query,{
             replacements:[ Number(id),fechaDesde,fechaHasta]}
         );
         
@@ -234,11 +240,70 @@ const extractOperationsByDate = async (req,res)=>{
         
 
 }
+const getAllOperationsByDate = async (req = request,res =response)=>{
+    const { token } = req.headers
+    let {fechaDesde,fechaHasta} = req.body
+    console.log('Recibimos fecha');
+    console.log(req.body);
+    console.log("Recibimos parametros", token);
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        
+        
+        let summary = {
+            totalAmountCompra:0,
+            totalAmountVenta:0,
+            totalAmountBTCVenta:0,
+            totalAmountBTCCompra:0,
+            totalAmountUSDTVenta:0,
+            totalAmountUSDTCompra:0,
+            totalOperations:0,
+        }
+        fechaHasta = fechaHasta+' 23:59:00'
+        fechaDesde = fechaDesde+ ' 00:00:00'
+        const [results, metadata] = await sequelize.query(
+            REPORT_BY_DATE,{
+            replacements:[fechaDesde,fechaHasta]}
+        );
+        summary.totalOperations = results.length        
+        results.forEach(( op )=>{
+           
+            console.log(op);
+            
+            //sumario de compra y venta
+            if(op.type === "1"){
+                summary.totalAmountUSDTCompra += Number(op.usdt)
+                summary.totalAmountBTCCompra += Number(op.btc)
+                summary.totalAmountCompra += Number(op.amount)
+                
+            }else{
+                summary.totalAmountUSDTVenta += Number(op.usdt)
+                summary.totalAmountBTCVenta += Number(op.btc)
+                summary.totalAmountVenta += Number(op.amount)
+            }
 
+
+           ;
+        })
+        console.log("Lista cargada");
+        console.log(summary);
+        res.json(summary)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg:'Ocurrio un error inesperado'
+        })
+    }
+       
+}
 module.exports = {
     addOperation,
     getAllOperationsByClient,
     getAllOperations,
     extractOperations,
-    extractOperationsByDate
+    extractOperationsByDate,
+    getAllOperationsByDate
 }
