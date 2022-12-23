@@ -19,7 +19,7 @@ const CoinMining = sequelize.define('coinmining', {
     type: {
         type: DataTypes.STRING,
     },
-    todollar:{
+    todollar: {
         type: DataTypes.STRING,
     },
     updated_at: {

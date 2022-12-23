@@ -6,8 +6,8 @@ const { getAllEnergias, updateEnergy } = require('../controllers/Energias');
 const router = Router();
 
 
-router.get('/',getAllEnergias)
-router.put('/:id',updateEnergy)
+router.get('/', getAllEnergias)
+router.put('/:id', updateEnergy)
 
 
 
