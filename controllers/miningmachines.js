@@ -339,8 +339,8 @@ const getCoinsByHourById = async (req, res) => {
 }
 
 const calculateConsumeMachinePowerByDay = async (req, res) => {
-    const { token } = req.headers
 
+    const { token } = req.headers
     const mining = await Mining.findAll({ where: { status: 0 } })
 
     mining.forEach(async (machine) => {
@@ -366,7 +366,6 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
         const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
 
         if (minutesBetweenUpdate >= 1440) {
-
             try {
                 await Consumos.create({
                     id_machine: machine.id_machine,
@@ -374,17 +373,13 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
                     consumo: valuesFixed,
                 })
             } catch (error) {
-                return console.log(error.message);
+                return res.status(500).json({ message: error.message });
             }
-
         }
     })
 
-    try {
+    res.json("se actualizo listado de consumo de energia")
 
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
 }
 
 
