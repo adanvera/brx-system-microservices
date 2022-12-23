@@ -3,6 +3,11 @@ const { getConsumosById } = require('../controllers/Consumos');
 
 const router = Router();
 
-router.get(`/:id`, getConsumosById)
 
-module.exports = router
+router.get('/:id',getConsumosById)
+
+
+
+
+
+module.exports = router;
