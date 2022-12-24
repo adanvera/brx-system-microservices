@@ -172,16 +172,14 @@ const extractOperationsByDate = async (req,res)=>{
     console.log("Recibimos parametros", id);
     try {
         /* /*  */
-        
-        
         let listExtract = []
         fechaHasta = fechaHasta+' 23:59:00'
         fechaDesde = fechaDesde+ ' 00:00:00'
         let query = GET_OPETARIONS_BY_DATE
         if(typeOperation === '1'){
-            query += " AND type = 1"
+            query += " AND type = '1'"
         }else if(typeOperation === '0'){
-            query += " AND type = 0"
+            query += " AND type = '0'"
         }
 
         const [results, metadata] = await sequelize.query(
