@@ -241,7 +241,7 @@ const calculateMiningCoins = async (req, res) => {
             /**funcion math random de 90 a 100 */
             const tempmax = Math.floor(Math.random() * (100 - 90) + 90)
 
-            if (minutesBetweenUpdate >= 0 && status === 0) {
+            if (minutesBetweenUpdate >= 60 && status === 0) {
 
                 const URL = "https://whattomine.com/asic.json?Authentication=none&factor[sha256_hr]=" + dataSpeed + "&sha256f=true"
                 const response = await fetch(URL, {
