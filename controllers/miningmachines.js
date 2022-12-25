@@ -229,14 +229,17 @@ const calculateMiningCoins = async (req, res) => {
             const sha = machine?.speed / zeros
             const dataSpeed = Number(sha)
             const status = machine.status
-            const updated_at = new Date(machine.uptime)
+            const updated_at = new Date(machine.mining_date)
             const diffDateBetweenUpdate = dateNow.getTime() - updated_at.getTime()
             const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
+
+            console.log("MINING DATE" , machine.mining_date);
+            console.log("MINUTES BETWEEN UPDATE" , minutesBetweenUpdate);
 
             /**funcion math random de 90 a 100 */
             const tempmax = Math.floor(Math.random() * (100 - 90) + 90)
 
-            if (minutesBetweenUpdate >= 60 && status === 0) {
+            if (minutesBetweenUpdate >= 0 && status === 0) {
 
                 const URL = "https://whattomine.com/asic.json?Authentication=none&factor[sha256_hr]=" + dataSpeed + "&sha256f=true"
                 const response = await fetch(URL, {
@@ -281,6 +284,7 @@ const calculateMiningCoins = async (req, res) => {
                     status: 0,
                     tempmax: tempmax,
                     amount_hour: bitcoinRevenuePerHour,
+                    mining_date: new Date(),
                 }, {
                     where: {
                         id_machine: machine.id_machine
