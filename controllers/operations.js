@@ -135,7 +135,7 @@ const extractOperations = async (req,res)=>{
             
             extract.fecha = op.created.toISOString().replace(/T/, ' ').      // replace T with a space
             replace(/\..+/, '')
-            extract.btc = op.btc
+            extract.btc = op.amount
             extract.usdt = op.usdt
             extract.operation = op.id_operations
             extract.cliente = id
@@ -273,12 +273,12 @@ const getAllOperationsByDate = async (req = request,res =response)=>{
             
             //sumario de compra y venta
             if(op.type === "1"){
-                summary.totalAmountUSDTCompra += Number(op.usdt)
+                summary.totalAmountUSDTCompra += Number(op.amount)
                 summary.totalAmountBTCCompra += Number(op.btc)
                 summary.totalAmountCompra += Number(op.amount)
                 
             }else{
-                summary.totalAmountUSDTVenta += Number(op.usdt)
+                summary.totalAmountUSDTVenta += Number(op.amount)
                 summary.totalAmountBTCVenta += Number(op.btc)
                 summary.totalAmountVenta += Number(op.amount)
             }
