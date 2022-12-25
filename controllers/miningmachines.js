@@ -197,7 +197,9 @@ const deleteMiningMachine = async (req, res) => {
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
 
-        const miningmachines = await Mining.destroy({
+        const miningmachines = await Mining.update({
+            status: Number(5)
+        }, {
             where: {
                 id_machine: id
             }
@@ -233,8 +235,8 @@ const calculateMiningCoins = async (req, res) => {
             const diffDateBetweenUpdate = dateNow.getTime() - updated_at.getTime()
             const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
 
-            console.log("MINING DATE" , machine.mining_date);
-            console.log("MINUTES BETWEEN UPDATE" , minutesBetweenUpdate);
+            console.log("MINING DATE", machine.mining_date);
+            console.log("MINUTES BETWEEN UPDATE", minutesBetweenUpdate);
 
             /**funcion math random de 90 a 100 */
             const tempmax = Math.floor(Math.random() * (100 - 90) + 90)
