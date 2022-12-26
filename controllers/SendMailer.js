@@ -369,7 +369,7 @@ const sendNotificationImportation = async (importacion, dias, email, tracking_nu
 
     console.log("arrivo: " + dateArrival);
     console.log("actual: " + dateActual);
-    const faltandias = Number(dias) + 1;
+    const faltandias = Number(dias);
     console.log("faltandias: " + Number(faltandias));
 
     const importForm =
@@ -422,6 +422,79 @@ const sendNotificationImportation = async (importacion, dias, email, tracking_nu
     console.log("Envio exitoso de notificación");
 }
 
+const sendNotificationImportationPasado = async (importacion, dias, email, tracking_number, fechaArribo) => {
+
+    /**parsear string a json */
+    const articleData = JSON.parse(importacion);
+    const specs = articleData[0].specs.replace(/[\[\]']+/g, '').replace(/[\{\}']+/g, '')
+    const algorithms = articleData[0].algorithms.replace(/[\[\]']+/g, '').replace(/[\{\}']+/g, '')
+    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const d = new Date(fechaArribo);
+    let name = month[d.getMonth()];
+    let day = d.getDate();
+    let year = d.getFullYear();
+    const dateArrival = day + "/" + name + "/" + year
+    const actualDate = new Date()
+    const nameactual = month[actualDate.getMonth()];
+    let dayactual = actualDate.getDate();
+    let yearactual = actualDate.getFullYear();
+    const dateActual = dayactual + "/" + nameactual + "/" + yearactual
+
+    console.log("arrivo: " + dateArrival);
+    console.log("actual: " + dateActual);
+    const faltandias = Number(dias);
+    console.log("faltandias: " + Number(faltandias));
+
+    const importForm =
+        `
+        <div class=""
+        style="justify-content: center; text-align:center; width: 550px; text-align: center; border-radius: 8px;">
+        <div class="headimg">
+            <img width="25%" src="http://drive.google.com/uc?export=view&id=1q1gXiwbiu6xHil_kpT9WSDcR6dWke6yX" alt=""
+                data-bit="iit" />
+        </div>
+        <div class="texthead">
+            <h1>Importación nro ${tracking_number}</h1>
+        </div>
+        <div class="cont" style=" border-radius: 8px;">
+            <h4>
+            ${(dateArrival === dateActual && faltandias === 0) ? 'Se notifica que tu importación ha llegado' :
+            'Se notifica que tu importación llegó hace ' + faltandias + ' día(s)'
+        }
+            </h4>
+        </div>
+        <div class="cont" style=" border-radius: 8px;">
+            <h6>Detalles de importación:</h6>
+            <div class="msg" style="border: 1px solid #008F8F;; border-radius: 8px; text-align: initial;
+            padding-left: 20px;">
+                <p> Marca: ${articleData[0].brand}</p>
+                <p> Especificaciones: ${specs}</p>
+                <p> Algoritmos: ${algorithms}</p>
+        </div>
+    `
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: "mail.brxsgo.com",
+        port: 465,
+        secure: true, // true for 465, false for other ports
+        auth: {
+            user: 'notificaciones@brxsgo.com', // your cPanel email address
+            pass: 'Kj9JWqn}2(-x', // your cPanel email password
+        },
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+        from: '"Arribo Importación" <notificaciones@brxsgo.com>', // sender address
+        to: email, // list of receivers
+        subject: "Arribo de importación", // Subject line
+        text: "Arribo Importación", // plain text body
+        html: importForm, // html body
+    });
+    console.log("Envio exitoso de notificación");
+}
+
 module.exports = {
     sendRegisterMail,
     resetPasswordMail,
@@ -430,5 +503,6 @@ module.exports = {
     sendMailMaintenance,
     sendVoucherOperations,
     sendNotificationImportation,
-    sendMailMaintenanceRestore
+    sendMailMaintenanceRestore,
+    sendNotificationImportationPasado
 }

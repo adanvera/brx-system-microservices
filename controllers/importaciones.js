@@ -1,9 +1,10 @@
 const sequelize = require("../database/db");
+const { gettingClientById } = require("../helpers/helper");
 const { Importacion, MINERS_SUMMARY, IMPOR_BY_ID } = require("../helpers/querys");
 const { checkToken } = require("../helpers/verifyToken");
 const Client = require("../models/client");
 const Importaciones = require('../models/importaciones');
-const { sendNotificationImportation } = require("./SendMailer");
+const { sendNotificationImportation, sendNotificationImportationPasado } = require("./SendMailer");
 
 const createImportacion = async (req, res) => {
     const { token } = req.headers
@@ -63,46 +64,47 @@ const verifyImportArrival = async (req, res) => {
         const importaciones = await Importaciones.findAll()
         /**verificar si fecha de arribo falta menos de 4 dias */
         importaciones.forEach(async (importacion) => {
+
+
+
             const fechaArribo = new Date(importacion.fecha_arribo)
             const fechaActual = new Date(Date.now());
-            const resta = fechaArribo - fechaActual
-            const dias = Math.floor(resta / (1000 * 60 * 60 * 24))
-            const update_at = new Date(importacion.update_at)
 
+            /**get the difference between the fechaActual  and  fechaArribo */
+            const diffTime = (fechaArribo - fechaActual);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+
+            
 
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
-
             today = dd + '/' + mm + '/' + yyyy;
-
-
             var compare = new Date(importacion.fecha_arribo)
             var day = String(compare.getDate()).padStart(2, '0');
             var month = String(compare.getMonth() + 1).padStart(2, '0'); //January is 0!
             var year = compare.getFullYear();
-
             compare = day + '/' + month + '/' + year;
 
-            console.log(today + " " + compare);
 
-            console.log(today <= compare);
+            // /**diferencias de dias entre today e y compare */
+            // var date1 = new Date(today);
+            // var date2 = new Date(compare);
+            // var diffTime = (date2 - date1);
+            // var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            /**diferencias de dias entre today e y compare */
-            var date1 = new Date(today);
+            console.log("DIFERENCIA DE DIAS " + diffDays);
 
-            var date2 = new Date(compare);
-            var diffTime = (date2 - date1);
-            var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            console.log("diferencia de dias " + dias);
-
-            if (dias <= 4 && dias >= 0) {
+            if (diffDays <= 4 && diffDays >= 0) {
                 const tracking_number = importacion.tracking_number
                 const dateToArrival = importacion.fecha_arribo
-                const client = await Client.findOne({ where: { id_client: importacion.id_cliente } });
-                const clientMail = client.dataValues.email
+                const id_client = importacion.id_cliente
+                console.log("iD CLIENTE " + id_client);
+                const client = await gettingClientById(id_client)
+                const clientMail = client.email
                 console.log("actualizando dias");
                 const id_aux = importacion.id_importacion
                 const impp = await Importaciones.findOne({ where: { id_importacion: id_aux } });
@@ -110,11 +112,28 @@ const verifyImportArrival = async (req, res) => {
                 console.log("actualizando dias");
                 await impp.update({ days: dias })
                 console.log("actualizando dias fin");
-                sendNotificationImportation(importacion.articulos, dias, clientMail, tracking_number, dateToArrival)
+                sendNotificationImportation(importacion.articulos, diffDays, clientMail, tracking_number, dateToArrival)
                 console.log("Envio notifgicacion");
             }
 
-
+            if (diffDays < 0) {
+                const absDays = Math.abs(diffDays)
+                const tracking_number = importacion.tracking_number
+                const dateToArrival = importacion.fecha_arribo
+                const id_client = importacion.id_cliente
+                console.log("iD CLIENTE " + id_client);
+                const client = await gettingClientById(id_client)
+                const clientMail = client.email
+                console.log("actualizando dias");
+                const id_aux = importacion.id_importacion
+                const impp = await Importaciones.findOne({ where: { id_importacion: id_aux } });
+                if (!impp) return res.status(400).json({ msg: `No existe la importación con el id ${id_aux}` });
+                console.log("actualizando dias");
+                await impp.update({ days: absDays })
+                console.log("actualizando dias fin");
+                sendNotificationImportationPasado(importacion.articulos, absDays, clientMail, tracking_number, dateToArrival)
+                console.log("Envio notifgicacion");
+            }
         });
         res.json("notificaciones enviadas")
     } catch (error) {
