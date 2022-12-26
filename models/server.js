@@ -25,6 +25,7 @@ class Server {
             energias: '/api/energias',
             consumos: '/api/consumos',
             coinmining: '/api/coinmining',
+            parametrizaciones: '/api/parametrizaciones',
         }
         // Middlewares
         this.middlewares();
@@ -65,6 +66,7 @@ class Server {
         this.app.use(this.paths.consumos, require('../routes/consumos'))
         this.app.use(this.paths.coinmining, require('../routes/coinmining'))
         this.app.use(this.paths.params, require('../routes/parametrizciones'))
+        this.app.use(this.paths.parametrizaciones, require('../routes/parametrizciones'))
     }
 
     listen() {
