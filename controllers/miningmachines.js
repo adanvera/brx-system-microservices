@@ -345,17 +345,25 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
 
         console.log("valueeeeeeeee ", valuesFixed);
 
-        const update_at = new Date(machine.uptime)
+        const update_at = new Date(machine.energy_date)
         const dateNow = new Date()
         const diffDateBetweenUpdate = dateNow.getTime() - update_at.getTime()
         const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
 
-        if (minutesBetweenUpdate >= 1440) {
+        if (minutesBetweenUpdate >= 0) {
             try {
                 await Consumos.create({
                     id_machine: machine.id_machine,
                     status: 0,
                     consumo: valuesFixed,
+                })
+                await Mining.update({
+                    status: 0,
+                    energy_date: new Date(),
+                }, {
+                    where: {
+                        id_machine: machine.id_machine
+                    }
                 })
             } catch (error) {
                 return res.status(500).json({ message: error.message });
