@@ -23,6 +23,7 @@ const UPDATE_REVENUE = 'UPDATE gestionagil_prodDB.miningmachines SET revenue_day
 const URL_BY_HOUR_BY_ID = 'SELECT id_machine , (CAST(amount  as float))  amount , created_at FROM gestionagil_prodDB.coinminings WHERE CAST(created_at AS DATE) = CURDATE()'
 const GET_MINEROS_REVENUE_BY_ID = 'SELECT id_coinmining, id_machine, amount, created_at, updated_at, `type` FROM gestionagil_prodDB.coinminings WHERE CAST(created_at AS DATE) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND NOW() AND id_machine = '
 const GET_CONSUMO_BY_ID = 'SELECT id_consumo, id_machine, status, created_at, updated_at, consumo FROM gestionagil_prodDB.consumos WHERE CAST(created_at AS DATE) = CURDATE() AND id_machine ='
+const GASTO_SUMMARY = 'SELECT MONTH(created_at) AS month, count(*) as cantidad  FROM gestionagil_prodDB.gastos WHERE  YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at) BETWEEN 1 and 12 GROUP BY MONTH(created_at) ORDER BY 1'
 
 module.exports = {
     GET_ROL_BY_ID,
@@ -48,5 +49,6 @@ module.exports = {
     URL_BY_HOUR_BY_ID,
     GET_MINEROS_REVENUE_BY_ID,
     GET_CONSUMO_BY_ID,
-    MINING_BY_DOCUMENT
+    MINING_BY_DOCUMENT,
+    GASTO_SUMMARY
 }

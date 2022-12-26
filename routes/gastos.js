@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { createGasto, getGastoSemanal, getGastoDelMes, getGastoDelAnio, getAllGastos, deleteGasto, getGastoById, updateGasto } = require('../controllers/gastos');
+const { createGasto, getGastoSemanal, getGastoDelMes, getGastoDelAnio, getAllGastos, deleteGasto, getGastoById, updateGasto, getCantidadGastoPorMes } = require('../controllers/gastos');
 
 
 
@@ -12,5 +12,6 @@ router.get('/get/year', getGastoDelAnio)
 router.delete('/:id', deleteGasto)
 router.get('/:id', getGastoById)
 router.put('/:id', updateGasto)
+router.get('/get/summary', getCantidadGastoPorMes)
 
 module.exports = router;

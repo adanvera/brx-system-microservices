@@ -1,6 +1,7 @@
 const { checkToken } = require("../helpers/verifyToken");
 const Gastos = require("../models/gastos");
 const sequelize = require("../database/db");
+const { GASTO_SUMMARY } = require("../helpers/querys");
 
 
 const createGasto = async (req, res) => {
@@ -150,6 +151,24 @@ const getAllGastos = async (req, res) => {
     }
 }
 
+const getCantidadGastoPorMes = async (req, res) => {
+    const { token } = req.headers
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        const [results, metadata] = await sequelize.query(
+            GASTO_SUMMARY
+        )
+        res.json(results)
+        console.log('Obtenemos los siguientes datos');
+        console.log(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
 
 module.exports = {
     createGasto,
@@ -159,5 +178,6 @@ module.exports = {
     getGastoSemanal,
     getGastoDelMes,
     getGastoDelAnio,
-    getAllGastos
+    getAllGastos,
+    getCantidadGastoPorMes
 }
