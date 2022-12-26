@@ -66,10 +66,19 @@ const deleteParam = async (req,res) =>{
         })
     }
 }
+const getParamByCodigo = async ( req,res )=>{
+    const {codigo} = req.params
+    const param = await Parametrizacione.findOne({where:{codigo}})
+    if(!param) return res.json({msg:'No exite parametro con codigo'+codigo})
+    res.json({
+        param
+    })
+}
 
 module.exports ={
     addParams,
     getAllParams,
     updateParams,
-    deleteParam
+    deleteParam,
+    getParamByCodigo
 }
