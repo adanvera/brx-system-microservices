@@ -297,11 +297,21 @@ const getAllOperationsByDate = async (req = request,res =response)=>{
     }
        
 }
+const getOperationById = async (req,res) =>{
+    const { id_operations } = req.params
+    const operation = await Operation.findOne({where:{id_operations}})
+    if(!operation) res.status(400).json({msg:'No se encuentra operacion con id'+id_operations})
+    res.json({
+        operation
+    })
+
+}
 module.exports = {
     addOperation,
     getAllOperationsByClient,
     getAllOperations,
     extractOperations,
     extractOperationsByDate,
-    getAllOperationsByDate
+    getAllOperationsByDate,
+    getOperationById
 }
