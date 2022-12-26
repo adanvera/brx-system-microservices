@@ -39,7 +39,7 @@ const getExtractPDFGET = async (req = request, res = response) => {
         rowToShow.push(row)
     });
 
-    rowToShow.push(['Total:','',sumCliente,'','',sumTotalBitcoin.toFixed(2)])
+    rowToShow.push(['Total:','',sumCliente+' ','','',sumTotalBitcoin])
 
 
 
@@ -51,7 +51,7 @@ const getExtractPDFGET = async (req = request, res = response) => {
                 dataValues.name + ' ' + dataValues.last_name + '\n' + 'Documento: ' + 
                 dataValues.document  +'\n'+
                 'Direccion: ' + dataValues.address + '\n' +
-                'Tipo de operecion: ' + typeOperations + '\n' +
+                'Tipo de operacion: ' + typeOperations + '\n' +
                 'Fecha desde: ' + fechaDesde + '    ' + 'Fecha hasta: ' + fechaHasta, fontSize: 9, color: 'balck',
         },
 
