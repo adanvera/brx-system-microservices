@@ -13,6 +13,7 @@ class Server {
             roles: '/api/roles',
             machines: '/api/machines',
             tickets: '/api/tickets',
+            params: '/api/params',
             client: '/api/client',
             images: '/api/images',
             mining: '/api/mining',
@@ -63,6 +64,7 @@ class Server {
         this.app.use(this.paths.energias, require('../routes/Energias'))
         this.app.use(this.paths.consumos, require('../routes/consumos'))
         this.app.use(this.paths.coinmining, require('../routes/coinmining'))
+        this.app.use(this.paths.params, require('../routes/parametrizciones'))
     }
 
     listen() {
