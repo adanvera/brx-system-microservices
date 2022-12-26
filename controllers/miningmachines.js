@@ -34,28 +34,13 @@ const getMiningMachines = async (req, res) => {
 const addMinero = async (req, res) => {
 
     const { token } = req.headers
-    const { machine_name, status, porcentaje, id_model, document, consume_machine, hashrate, tempmax
-        , maxfan, ip, machinedata } = req.body
+    const { data } = req.body
     try {
         if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-
-        const miningmachines = await Mining.create({
-            machinedata,
-            machine_name,
-            status,
-            porcentaje,
-            id_model,
-            document,
-            consume_machine,
-            hashrate,
-            tempmax,
-            maxfan,
-            ip
-        })
-
+        const miningmachines = await Mining.create(req.body)
         res.json(miningmachines)
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -109,7 +94,7 @@ const getMachineByDocument = async (req, res) => {
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-        const [results, metadata] = await sequelize.query(MINING_BY_DOCUMENT+document)
+        const [results, metadata] = await sequelize.query(MINING_BY_DOCUMENT + document)
         res.json(results)
     } catch (error) {
         return res.status(500).json({ message: error.message });
