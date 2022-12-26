@@ -12,10 +12,12 @@ const REPORT_BY_DATE = "select * from operations WHERE created BETWEEN ? AND ?"
 const addOperation = async (req,res) => {
     const { token } = req.headers
     const id_client = req.body.id_client
+    let userId
     try {
         if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         //verificamos el token si es valido o no ha expirado
-        const isToken = await checkToken(token)
+        const isToken = await checkToken(token,userId)
+        console.log(userId);
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
         const existClient = await Client.findOne({where:{id_client}})
         if(!existClient) return res.status(400).json({msg:`cliente no  existecon codigo ${id_client} no existe `})
@@ -135,7 +137,7 @@ const extractOperations = async (req,res)=>{
             
             extract.fecha = op.created.toISOString().replace(/T/, ' ').      // replace T with a space
             replace(/\..+/, '')
-            extract.btc = op.btc
+            extract.btc = op.amount
             extract.usdt = op.usdt
             extract.operation = op.id_operations
             extract.cliente = id
@@ -273,12 +275,12 @@ const getAllOperationsByDate = async (req = request,res =response)=>{
             
             //sumario de compra y venta
             if(op.type === "1"){
-                summary.totalAmountUSDTCompra += Number(op.usdt)
+                summary.totalAmountUSDTCompra += Number(op.amount)
                 summary.totalAmountBTCCompra += Number(op.btc)
                 summary.totalAmountCompra += Number(op.amount)
                 
             }else{
-                summary.totalAmountUSDTVenta += Number(op.usdt)
+                summary.totalAmountUSDTVenta += Number(op.amount)
                 summary.totalAmountBTCVenta += Number(op.btc)
                 summary.totalAmountVenta += Number(op.amount)
             }
