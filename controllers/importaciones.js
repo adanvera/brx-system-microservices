@@ -110,7 +110,7 @@ const verifyImportArrival = async (req, res) => {
                 const impp = await Importaciones.findOne({ where: { id_importacion: id_aux } });
                 if (!impp) return res.status(400).json({ msg: `No existe la importación con el id ${id_aux}` });
                 console.log("actualizando dias");
-                await impp.update({ days: dias })
+                await impp.update({ days: diffDays })
                 console.log("actualizando dias fin");
                 sendNotificationImportation(importacion.articulos, diffDays, clientMail, tracking_number, dateToArrival)
                 console.log("Envio notifgicacion");
