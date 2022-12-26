@@ -1,14 +1,14 @@
 const { INTEGER, DataTypes } = require("sequelize");
 const sequelize = require("../database/db");
 
-const Energia = sequelize.define('energias', {
+const Energias = sequelize.define('energias', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true
     },
     precio: {
-        type: DataTypes.FLOAT
+        type: DataTypes.DOUBLE
     },
     created_at: {
         type: DataTypes.DATE,
@@ -21,4 +21,4 @@ const Energia = sequelize.define('energias', {
     timestamps: false
 })
 
-module.exports = Energia;
+module.exports = Energias;

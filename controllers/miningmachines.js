@@ -1,12 +1,12 @@
 const sequelize = require("../database/db");
 const { checkToken } = require("../helpers/verifyToken");
 const Mining = require("../models/miningmachines")
-const { GET_MINING_MACHINES, MINERS_SUMMARY, URL_BY_HOUR_BY_ID } = require("../helpers/querys");
+const { GET_MINING_MACHINES, MINERS_SUMMARY, URL_BY_HOUR_BY_ID, MINING_BY_DOCUMENT } = require("../helpers/querys");
 const { gettingClientByDocuemnt } = require("../helpers/helper");
 const { sendMailMaintenance, sendMailMaintenanceRestore } = require("./SendMailer");
 const fetch = require('node-fetch');
 const { FLOAT } = require("sequelize");
-const CoinMining = require("../models/CoinMining");
+const CoinMining = require("../models/coinmining");
 const Consumos = require("../models/Consumos");
 const Energia = require("../models/Energia");
 
@@ -34,28 +34,13 @@ const getMiningMachines = async (req, res) => {
 const addMinero = async (req, res) => {
 
     const { token } = req.headers
-    const { machine_name, status, porcentaje, id_model, document, consume_machine, hashrate, tempmax
-        , maxfan, ip, machinedata } = req.body
+    const { data } = req.body
     try {
         if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-
-        const miningmachines = await Mining.create({
-            machinedata,
-            machine_name,
-            status,
-            porcentaje,
-            id_model,
-            document,
-            consume_machine,
-            hashrate,
-            tempmax,
-            maxfan,
-            ip
-        })
-
+        const miningmachines = await Mining.create(req.body)
         res.json(miningmachines)
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -109,14 +94,8 @@ const getMachineByDocument = async (req, res) => {
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-
-        const miningmachines = await Mining.findAll({
-            where: {
-                document: document
-            }
-        })
-
-        res.json(miningmachines)
+        const [results, metadata] = await sequelize.query(MINING_BY_DOCUMENT + document)
+        res.json(results)
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
@@ -197,7 +176,9 @@ const deleteMiningMachine = async (req, res) => {
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
 
-        const miningmachines = await Mining.destroy({
+        const miningmachines = await Mining.update({
+            status: Number(5)
+        }, {
             where: {
                 id_machine: id
             }
@@ -229,9 +210,12 @@ const calculateMiningCoins = async (req, res) => {
             const sha = machine?.speed / zeros
             const dataSpeed = Number(sha)
             const status = machine.status
-            const updated_at = new Date(machine.uptime)
+            const updated_at = new Date(machine.mining_date)
             const diffDateBetweenUpdate = dateNow.getTime() - updated_at.getTime()
             const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
+
+            console.log("MINING DATE", machine.mining_date);
+            console.log("MINUTES BETWEEN UPDATE", minutesBetweenUpdate);
 
             /**funcion math random de 90 a 100 */
             const tempmax = Math.floor(Math.random() * (100 - 90) + 90)
@@ -253,12 +237,35 @@ const calculateMiningCoins = async (req, res) => {
 
                     });
 
+                const ulr_two = "https://api.minerstat.com/v2/coins?list=BTC"
+
+                const response_two = await fetch(ulr_two, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        cors: 'no-cors'
+                    },
+                }).then(res => res.json())
+                    .then(json => {
+                        return json
+                    }
+                    ).catch(err => {
+                        console.log(err);
+
+                    });
+
                 const bitcoinRevenueDay = response?.coins?.Bitcoin.btc_revenue24
-                const bitcoinRevenuePerHour = bitcoinRevenueDay
+                const price = response_two[0].price
+
+                const bitcoinRevenuePerHour = bitcoinRevenueDay / 24
+
+                const castodollar = bitcoinRevenuePerHour * price
 
                 await Mining.update({
                     status: 0,
                     tempmax: tempmax,
+                    amount_hour: bitcoinRevenuePerHour,
+                    mining_date: new Date(),
                 }, {
                     where: {
                         id_machine: machine.id_machine
@@ -269,6 +276,7 @@ const calculateMiningCoins = async (req, res) => {
                     await CoinMining.create({
                         id_machine: machine.id_machine,
                         amount: bitcoinRevenuePerHour,
+                        todollar: castodollar,
                         type: "HOUR",
                     })
                 } catch (error) {
@@ -316,8 +324,8 @@ const getCoinsByHourById = async (req, res) => {
 }
 
 const calculateConsumeMachinePowerByDay = async (req, res) => {
-    const { token } = req.headers
 
+    const { token } = req.headers
     const mining = await Mining.findAll({ where: { status: 0 } })
 
     mining.forEach(async (machine) => {
@@ -337,33 +345,34 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
 
         console.log("valueeeeeeeee ", valuesFixed);
 
-        const update_at = new Date(machine.uptime)
+        const update_at = new Date(machine.energy_date)
         const dateNow = new Date()
         const diffDateBetweenUpdate = dateNow.getTime() - update_at.getTime()
         const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
 
         if (minutesBetweenUpdate >= 1440) {
-
             try {
                 await Consumos.create({
                     id_machine: machine.id_machine,
                     status: 0,
                     consumo: valuesFixed,
                 })
+                await Mining.update({
+                    status: 0,
+                    energy_date: new Date(),
+                }, {
+                    where: {
+                        id_machine: machine.id_machine
+                    }
+                })
             } catch (error) {
-                return console.log(error.message);
+                return res.status(500).json({ message: error.message });
             }
-
         }
     })
 
+    res.json("se actualizo listado de consumo de energia")
 
-
-    try {
-
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
 }
 
 
@@ -376,6 +385,37 @@ const getAmountDayPower = async (req, res) => {
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
         const [results, metadata] = await sequelize.query('SELECT id_machine, created_at, updated_at,  SUM(CAST(consumo  as float)) amount_day  FROM gestionagil_prodDB.consumos WHERE CAST(created_at AS DATE) = CURDATE()GROUP BY id_machine         ')
+        res.json(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+
+const getConsumoMachineMiningMes = async (req, res) => {
+    const { token } = req.headers
+    const { id } = req.params
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        const [results, metadata] = await sequelize.query('SELECT id_consumo, id_machine, status, created_at, updated_at, SUM(CAST(consumo  as float)) consumo FROM gestionagil_prodDB.consumos WHERE YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at)  = MONTH(CURRENT_DATE()) AND id_machine =' + id)
+        res.json(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
+
+const getSumCurrentMonth = async (req, res) => {
+    const { token } = req.headers
+    const { id } = req.params
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        const [results, metadata] = await sequelize.query('SELECT id_coinmining, id_machine, amount, created_at, updated_at, `type`, SUM(CAST(todollar  as float)) todollar  FROM gestionagil_prodDB.coinminings WHERE YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at)  = MONTH(CURRENT_DATE()) AND id_machine = ' + id)
         res.json(results)
     } catch (error) {
         return res.status(500).json({ message: error.message });
@@ -395,5 +435,7 @@ module.exports = {
     getCoinsByDay,
     getCoinsByHourById,
     calculateConsumeMachinePowerByDay,
-    getAmountDayPower
+    getAmountDayPower,
+    getConsumoMachineMiningMes,
+    getSumCurrentMonth
 }

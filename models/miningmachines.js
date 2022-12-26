@@ -60,6 +60,13 @@ const Mining = sequelize.define('miningmachines', {
     speed: {
         type: DataTypes.DOUBLE,
     },
+    mining_date: {
+        type: DataTypes.DATE,
+        defaultValue: new Date()
+    },
+    energy_date:{
+        type: DataTypes.DATE,
+    }
 }, {
     timestamps: false
 })

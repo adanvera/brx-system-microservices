@@ -21,24 +21,29 @@ class Server {
             importaciones: '/api/importaciones',
             proveedores: '/api/proveedores',
             gastos: '/api/gastos',
-            consumos: '/api/consumos'
+            energias: '/api/energias',
+            consumos: '/api/consumos',
+            coinmining: '/api/coinmining',
         }
-
         // Middlewares
         this.middlewares();
-
         // Rutas de mi aplicación
         this.routes();
     }
 
     middlewares() {
         // CORS
-        this.app.use(cors());
+        this.app.use(cors(
+            {
+                origin: '*',
+                methods: ['GET', 'POST', 'PUT', 'DELETE'],
+                credentials: true
+            }
+        ));
         // Lectura y parseo del body
         this.app.use(express.json());
         // Directorio Público
         this.app.use(express.static('public'));
-
     }
 
     routes() {
@@ -55,7 +60,9 @@ class Server {
         this.app.use(this.paths.importaciones, require('../routes/importaciones'))
         this.app.use(this.paths.proveedores, require('../routes/proveedores'))
         this.app.use(this.paths.gastos, require('../routes/gastos'))
+        this.app.use(this.paths.energias, require('../routes/Energias'))
         this.app.use(this.paths.consumos, require('../routes/consumos'))
+        this.app.use(this.paths.coinmining, require('../routes/coinmining'))
     }
 
     listen() {
