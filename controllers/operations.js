@@ -12,15 +12,17 @@ const REPORT_BY_DATE = "select * from operations WHERE created BETWEEN ? AND ?"
 const addOperation = async (req,res) => {
     const { token } = req.headers
     const id_client = req.body.id_client
-    let userId
+    let userId = []
     try {
         if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token,userId)
-        console.log(userId);
+        console.log(userId[0]);
+        
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
         const existClient = await Client.findOne({where:{id_client}})
         if(!existClient) return res.status(400).json({msg:`cliente no  existecon codigo ${id_client} no existe `})
+        req.body.id_user = userId[0]
         const operation = await Operation.create(req.body)
         await sendVoucherOperations(operation,existClient)
         res.json({
