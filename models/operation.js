@@ -33,6 +33,9 @@ const Operation = sequelize.define('operations',{
     },
     usdt:{
         type:DataTypes.STRING
+    },
+    id_user:{
+        type:DataTypes.STRING
     }
 },{
     timestamps: false
