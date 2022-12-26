@@ -51,8 +51,25 @@ const updateParams = async (req,res) =>{
 
 }
 
+const deleteParam = async (req,res) =>{
+    const {codigo} = req.params
+    try {
+        const param = await Parametrizacione.destroy({where:{codigo}})
+        if(!param) return res.json({msg:'Ocurrio un error al eliminar'})
+        res.status(200).json({
+            msg:'Eliminado correctamente'
+        })
+    } catch (error) {
+        console.log(error);
+        res.json({
+            msg:'Ocurrio un error inesperado'
+        })
+    }
+}
+
 module.exports ={
     addParams,
     getAllParams,
-    updateParams
+    updateParams,
+    deleteParam
 }
