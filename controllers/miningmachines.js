@@ -1,7 +1,7 @@
 const sequelize = require("../database/db");
 const { checkToken } = require("../helpers/verifyToken");
 const Mining = require("../models/miningmachines")
-const { GET_MINING_MACHINES, MINERS_SUMMARY, URL_BY_HOUR_BY_ID } = require("../helpers/querys");
+const { GET_MINING_MACHINES, MINERS_SUMMARY, URL_BY_HOUR_BY_ID, MINING_BY_DOCUMENT } = require("../helpers/querys");
 const { gettingClientByDocuemnt } = require("../helpers/helper");
 const { sendMailMaintenance, sendMailMaintenanceRestore } = require("./SendMailer");
 const fetch = require('node-fetch');
@@ -109,14 +109,8 @@ const getMachineByDocument = async (req, res) => {
         //verificamos el token si es valido o no ha expirado
         const isToken = await checkToken(token)
         if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
-
-        const miningmachines = await Mining.findAll({
-            where: {
-                document: document
-            }
-        })
-
-        res.json(miningmachines)
+        const [results, metadata] = await sequelize.query(MINING_BY_DOCUMENT+document)
+        res.json(results)
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }

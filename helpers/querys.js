@@ -16,7 +16,7 @@ const MINERS_SUMMARY = 'SELECT MONTH(created_at) AS monthdate, count(*) as canti
 const GET_OPERATIONS_BY_CLIENT = "SELECT * FROM operations WHERE id_client = ?"
 const GET_COUNT_USER = '  '
 const GET_OPETARIONS_BY_DATE = GET_OPERATIONS_BY_CLIENT + " AND created BETWEEN  ? AND ?"
-
+const MINING_BY_DOCUMENT = 'SELECT gestionagil_prodDB.miningmachines.speed,gestionagil_prodDB.miningmachines.mining_date,gestionagil_prodDB.miningmachines.revenue_day , gestionagil_prodDB.miningmachines.revenue_hour, gestionagil_prodDB.miningmachines.id_machine, gestionagil_prodDB.miningmachines.status, gestionagil_prodDB.miningmachines.porcentaje, gestionagil_prodDB.miningmachines.consume_machine, CONCAT(  gestionagil_prodDB.clients.name , " ", gestionagil_prodDB.clients.last_name ) AS name  ,gestionagil_prodDB.clients.id_client as id_client ,gestionagil_prodDB.clients.document ,gestionagil_prodDB.miningmachines.machine_name, gestionagil_prodDB.miningmachines.hashrate, gestionagil_prodDB.miningmachines.tempmax, gestionagil_prodDB.miningmachines.maxfan, gestionagil_prodDB.miningmachines.uptime, gestionagil_prodDB.miningmachines.updated_at,  gestionagil_prodDB.miningmachines.ip, gestionagil_prodDB.miningmachines.created_at, gestionagil_prodDB.miningmachines.machinedata, gestionagil_prodDB.miningmachines.historialMantenience FROM gestionagil_prodDB.miningmachines JOIN gestionagil_prodDB.clients on gestionagil_prodDB.miningmachines.document = gestionagil_prodDB.clients.document WHERE gestionagil_prodDB.clients.document ='
 const Importacion = 'SELECT impor.id_importacion, impor.id_cliente, CONCAT(  client.name , " ",client.last_name ) as client,impor.id_proveedor, impor.empresa_envio, impor.tracking_number, impor.valor_envio, impor.fecha_envio, impor.comentario_importacion, impor.articulos, impor.cantidad, impor.fecha_arribo, impor.created_at, impor.updated_at FROM gestionagil_prodDB.importaciones impor JOIN gestionagil_prodDB.clients client  ON impor.id_cliente = client.id_client '
 const IMPOR_BY_ID = 'SELECT impor.id_importacion, impor.id_cliente, CONCAT(  client.name , " ",client.last_name ) as client, historial ,impor.id_proveedor, impor.empresa_envio, impor.tracking_number, impor.valor_envio, impor.fecha_envio, impor.comentario_importacion, impor.articulos, impor.cantidad, impor.fecha_arribo, impor.created_at, impor.updated_at FROM gestionagil_prodDB.importaciones impor JOIN gestionagil_prodDB.clients client  ON impor.id_cliente = client.id_client WHERE impor.id_importacion ='
 const UPDATE_REVENUE = 'UPDATE gestionagil_prodDB.miningmachines SET revenue_day=?, revenue_hour=? WHERE id_machine=?'
@@ -47,5 +47,6 @@ module.exports = {
     UPDATE_REVENUE,
     URL_BY_HOUR_BY_ID,
     GET_MINEROS_REVENUE_BY_ID,
-    GET_CONSUMO_BY_ID
+    GET_CONSUMO_BY_ID,
+    MINING_BY_DOCUMENT
 }
