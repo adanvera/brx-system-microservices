@@ -336,7 +336,7 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
 
         const pricePower = await Energia.findAll()
 
-        const energyPrice = Number(pricePower[0]?.dataValues?.precio)
+        const energyPrice = (Number(pricePower[0]?.dataValues?.precio)) / 24
         console.log("Precio de la energia", energyPrice);
 
         const values = div * energyPrice
@@ -350,7 +350,7 @@ const calculateConsumeMachinePowerByDay = async (req, res) => {
         const diffDateBetweenUpdate = dateNow.getTime() - update_at.getTime()
         const minutesBetweenUpdate = Math.floor(diffDateBetweenUpdate / 1000 / 60)
 
-        if (minutesBetweenUpdate >= 1440) {
+        if (minutesBetweenUpdate >= 60) {
             try {
                 await Consumos.create({
                     id_machine: machine.id_machine,
