@@ -169,6 +169,21 @@ const getCantidadGastoPorMes = async (req, res) => {
     }
 }
 
+const gastosPorMes = async (req, res) => {
+    const { token } = req.headers
+    try {
+        if (!token) return res.status(400).json({ msg: `El token es obligatorio` });
+        //verificamos el token si es valido o no ha expirado
+        const isToken = await checkToken(token)
+        if (!isToken) return res.status(400).json({ msg: `El token no existe o ha expirado` });
+        const [results, metadata] = await sequelize.query('SELECT MONTH(created_at) AS month, SUM(amount ) as amount  FROM gestionagil_prodDB.gastos WHERE  YEAR(created_at) = YEAR(CURRENT_DATE()) AND MONTH(created_at) BETWEEN 1 and 12 GROUP BY MONTH(created_at) ORDER BY 1        ')
+        res.json(results)
+        console.log('Obtenemos los siguientes datos');
+        console.log(results)
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
 
 module.exports = {
     createGasto,
@@ -179,5 +194,6 @@ module.exports = {
     getGastoDelMes,
     getGastoDelAnio,
     getAllGastos,
-    getCantidadGastoPorMes
+    getCantidadGastoPorMes,
+    gastosPorMes
 }
