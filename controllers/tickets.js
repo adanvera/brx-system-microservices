@@ -134,7 +134,6 @@ const ticketSummary = async (req, res) => {
         res.json(results)
         console.log('Obtenemos los siguientes datos');
         console.log(results)
-
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
