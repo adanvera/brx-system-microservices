@@ -320,7 +320,7 @@ const sendVoucherOperations = async (operation, cliente) => {
                     <p> Direccion: ${cliente.address}</p>
                     <p> Tipo operacion: ${operation.type === '0'?'Compra':'Venta'}</p>
                     <p> Comision: ${operation.commission}</p>
-                    <p> Monto total: ${operation.btc === '0'?(operation.amount +' USDT'):(operation.btc+' BTC')} </p>
+                    <p> Monto total: ${operation.btc === 0?(operation.amount +' USDT'):(operation.btc+' BTC')} </p>
                     <p> Fecha operacion: ${new Date().toLocaleString()}</p>
                 </div>
             </div>
