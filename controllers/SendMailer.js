@@ -318,9 +318,9 @@ const sendVoucherOperations = async (operation, cliente) => {
                     <p> Cliente: ${cliente.document}</p>
                     <p> Nombre y apellido: ${cliente.name + ' ' + cliente.last_name}</p>
                     <p> Direccion: ${cliente.address}</p>
-                    <p> Telfono: ${cliente.phone}</p>
+                    <p> Tipo operacion: ${operation.type === '0'?'Compra':'Venta'}</p>
                     <p> Comision: ${operation.commission}</p>
-                    <p> Monto total: ${operation.amount + ' USD'} </p>
+                    <p> Monto total: ${operation.btc === '0'?(operation.amount +' USDT'):(operation.btc+' BTC')} </p>
                     <p> Fecha operacion: ${new Date().toLocaleString()}</p>
                 </div>
             </div>
